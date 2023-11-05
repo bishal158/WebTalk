@@ -1,0 +1,11 @@
+nav{
+    background-color: #7e95ef;
+}
+
+nav li a.active{
+    font-weight: bolder;
+    border: #566fb2 solid 1px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    transition: ease-in-out  all .15s ;
+}

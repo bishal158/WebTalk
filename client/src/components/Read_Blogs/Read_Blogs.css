@@ -1,0 +1,27 @@
+.author{
+    color: #000;
+    font-weight: bold;
+    margin-right: 5px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+.card{
+    width: 100%;
+    height: 300px;
+}
+.card-header{
+    height: 20%;
+}
+.card-body{
+    height: 60%;
+}
+.card-footer{
+    height: 20%;
+}
+.img-fluid{
+    width: 100%;
+    height: 300px;
+    border: 1px solid ;
+    border-radius: 2px;
+}

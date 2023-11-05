@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Noto Serif Malayalam
+- Font Author: Copyright 2022 The Noto Project Authors (https://github.com/notofonts/malayalam)
+- Font Source: http://fonts.gstatic.com/s/notoserifmalayalam/v28/JIAZUU5sdmdP_HMcVcZFcH7DeVBeGVgSMEk2cmVDq1ihUXL1t-xfnVwHpQVySg.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))

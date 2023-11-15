@@ -1,5 +1,5 @@
 import "./Hero_Section.css";
-import hero_section from "../../../../assets/images/Hero_Section.gif";
+import hero_section from "../../../../assets/images/Blog post.gif";
 export const Hero_Section = () => {
   return (
     <>

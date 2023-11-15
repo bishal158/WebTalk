@@ -17,7 +17,7 @@ export const Register = () => {
   const success_toast = () => {
     toast.success("Registration Successful", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 1000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -31,9 +31,9 @@ export const Register = () => {
     });
   };
   const error_toast = () => {
-    toast.error("Registration Failed", {
+    toast.error("User Already Exists, Login!!", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 1000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -54,31 +54,23 @@ export const Register = () => {
   };
   const register = async (e) => {
     e.preventDefault();
-    try {
-      await fetch("http://localhost:5000/register", {
-        method: "POST",
-        body: JSON.stringify({ Inputs }),
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (e) {
-      alert(e);
-    }
-
-    // axios
-    //   .post("http://localhost:5000/register", {
-    //     email: inputs.email,
-    //     password: inputs.password,
-    //   })
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       success_toast();
-    //       email_ref.current.value = "";
-    //       password_ref.current.value = "";
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     error_toast();
-    //   });
+    const response = await fetch("http://localhost:5000/user/register", {
+      method: "POST",
+      body: JSON.stringify({ Inputs }),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+          success_toast();
+          email_ref.current.value = "";
+          password_ref.current.value = "";
+        }
+        if (response.status === 409) {
+          error_toast();
+        }
+      })
+      .catch((error) => {});
   };
   return (
     <>

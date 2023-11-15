@@ -12,16 +12,20 @@ import { Home } from "./components/Home/Home.jsx";
 import { Login } from "./components/Auth/Login.jsx";
 import { Register } from "./components/Auth/Register.jsx";
 import { Loading_Spinner } from "./components/Loading_Spinner/Loading_Spinner.jsx";
+import { User_Context_Provider } from "./context/User_Context.jsx";
 
 const Read_Blogs = React.lazy(() =>
   import("./components/Read_Blogs/Read_Blogs.jsx"),
+);
+const Contact_Us = React.lazy(() =>
+  import("./components/Contact_Us/Contact_Us.jsx"),
 );
 const Write_Blogs = React.lazy(() =>
   import("./components/Write_Blogs/Write_Blogs.jsx"),
 );
 function App() {
   return (
-    <>
+    <User_Context_Provider>
       <header>
         <Header />
       </header>
@@ -44,12 +48,20 @@ function App() {
               </React.Suspense>
             }
           />
+          <Route
+            path="contact_us"
+            element={
+              <React.Suspense fallback={<Loading_Spinner />}>
+                <Contact_Us />
+              </React.Suspense>
+            }
+          />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Routes>
       </main>
       <footer></footer>
-    </>
+    </User_Context_Provider>
   );
 }
 

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { PORT, MONGODB_CONNECTION } = require("../server/config");
 const cors = require("cors");
 const app = express();
+const cookieParser = require("cookie-parser");
 // api routes
 const UserRoutes = require("./routes/User-Routes");
 // models
@@ -11,11 +12,14 @@ const User = require("./models/User");
 app.use(
   cors({
     origin: "http://localhost:5173",
+    credentials: true,
   }),
 );
 app.use(express.json());
+app.use(cookieParser());
 // middleware
-app.use("/register", UserRoutes);
+app.use("/user", UserRoutes);
+
 // database connection
 mongoose
   .connect(MONGODB_CONNECTION)

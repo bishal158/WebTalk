@@ -1,52 +1,86 @@
 import "./Login.css";
-
-import { useRef, useState } from "react";
-import axios from "axios";
-axios.defaults.withCredentials = true;
-import { json, useNavigate } from "react-router-dom";
+import { useRef, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import React from "react";
-import data from "bootstrap/js/src/dom/data.js";
+import { User_Context } from "../../context/User_Context.jsx";
+const success_toast = () => {
+  toast.success("Login Successful", {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    onClick: () => {
+      navigator("/login");
+    },
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    icon: "✔️",
+  });
+};
+const error_toast = () => {
+  toast.error("Login Failed", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    onClick: () => {
+      navigator("/");
+    },
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    icon: "❌",
+  });
+};
 export const Login = () => {
+  const { setUserInfo } = useContext(User_Context);
   const navigator = useNavigate();
-  const [inputs, setInputs] = useState({
+  const [Inputs, setInputs] = useState({
     email: "",
     password: "",
   });
   const email_ref = useRef();
   const password_ref = useRef();
-  const error_toast = () => {
-    toast.error("Login Failed", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      onClick: () => {
-        navigator("/");
-      },
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      icon: "❌",
-    });
-  };
   const handleChange = (e) => {
     setInputs((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
+    const response = await fetch("http://localhost:5000/user/login", {
+      method: "POST",
+      body: JSON.stringify({ Inputs }),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          email_ref.current.value = "";
+          password_ref.current.value = "";
+          response.json().then((UserInfo) => {
+            setUserInfo(UserInfo.email);
+            navigator("/");
+          });
+        }
+        if (response.status === 409) {
+          error_toast();
+        }
+      })
+      .catch((error) => {});
   };
 
   return (
     <>
       <div className="container">
-        <h2 className="register-header">Register Here</h2>
-        <form className="register-form" onSubmit={login}>
+        <h2 className="login-header">Login Here</h2>
+        <form className="login-form" onSubmit={login}>
           <div className="form-floating mb-3">
             <input
               type="email"
@@ -79,8 +113,8 @@ export const Login = () => {
             </span>
           </div>
 
-          <div className="register-button">
-            <button type="submit">Register</button>
+          <div className="login-button">
+            <button type="submit">Login</button>
           </div>
         </form>
       </div>

@@ -1,9 +1,11 @@
 import "./Write_Blogs.css";
 import "react-quill/dist/quill.snow.css";
+import { toast, ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import ReactQuill from "react-quill";
-
+import { success_toast } from "../Toast_Message/Toast.jsx";
+import { useNavigate } from "react-router-dom";
 // editor
 let toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -37,7 +39,8 @@ const Write_Blogs = () => {
   const title_ref = useRef();
   const summary_ref = useRef();
   const content_ref = useRef();
-
+  // navigation
+  const navigator = useNavigate();
   const blog_post = async (e) => {
     const data = new FormData();
     data.set("title", title);
@@ -48,7 +51,11 @@ const Write_Blogs = () => {
     const response = await fetch("http://localhost:5000/user/post", {
       method: "POST",
       body: data,
+      credentials: "include",
     });
+    if (response.status === 200) {
+      navigator("/");
+    }
   };
   return (
     <>
@@ -113,6 +120,7 @@ const Write_Blogs = () => {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </>
   );
 };

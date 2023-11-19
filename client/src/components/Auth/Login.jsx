@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import React from "react";
 import { User_Context } from "../../context/User_Context.jsx";
+
+// const navigator = useNavigate();
 const success_toast = () => {
   toast.success("Login Successful", {
     position: "top-right",
@@ -12,9 +14,6 @@ const success_toast = () => {
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
-    onClick: () => {
-      navigator("/login");
-    },
     draggable: true,
     progress: undefined,
     theme: "dark",
@@ -28,9 +27,6 @@ const error_toast = () => {
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
-    onClick: () => {
-      navigator("/");
-    },
     draggable: true,
     progress: undefined,
     theme: "dark",
@@ -39,7 +35,6 @@ const error_toast = () => {
 };
 export const Login = () => {
   const { setUserInfo } = useContext(User_Context);
-  const navigator = useNavigate();
   const [Inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -52,6 +47,7 @@ export const Login = () => {
       [e.target.name]: e.target.value,
     }));
   };
+  const navigator = useNavigate();
   const login = async (e) => {
     e.preventDefault();
     const response = await fetch("http://localhost:5000/user/login", {

@@ -13,6 +13,7 @@ import { Login } from "./components/Auth/Login.jsx";
 import { Register } from "./components/Auth/Register.jsx";
 import { Loading_Spinner } from "./components/Loading_Spinner/Loading_Spinner.jsx";
 import { User_Context_Provider } from "./context/User_Context.jsx";
+import { Read_Full_Blog } from "./components/Read_Full_Blog/Read_Full_Blog.jsx";
 
 const Read_Blogs = React.lazy(() =>
   import("./components/Read_Blogs/Read_Blogs.jsx"),
@@ -58,6 +59,7 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="/post/:id" element={<Read_Full_Blog />} />
         </Routes>
       </main>
       <footer></footer>

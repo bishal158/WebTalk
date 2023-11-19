@@ -4,9 +4,12 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
+const filesystem = require("fs");
 const SECRET_KEY = "secret";
+
 // models
 const User = require("../models/User");
+const Post = require("../models/Post");
 
 // registration new users
 router.post("/register", async (request, response) => {
@@ -95,8 +98,40 @@ router.post("/logout", (request, response) => {
 
 // post
 
-router.post("/post", upload.single("images"), (request, response) => {
-  response.json({ images: request.file });
+router.post("/post", upload.single("images"), async (request, response) => {
+  const { originalname, path } = request.file;
+  const parts = originalname.split(".");
+  const extension = parts[parts.length - 1];
+  const newPath = path + "." + extension;
+  filesystem.renameSync(path, newPath);
+  const { token } = request.cookies;
+  jwt.verify(token, SECRET_KEY, {}, async (error, info) => {
+    if (error) throw error;
+    const { title, summary, content } = request.body;
+    const post = await Post.create({
+      title,
+      summary,
+      content,
+      images: newPath,
+      author: info.id,
+    });
+    response.json(post);
+  });
+});
+
+// getPost
+router.get("/getPost", async (request, response) => {
+  response.json(
+    await Post.find()
+      .populate("author", ["email"])
+      .sort({ createdAt: -1 })
+      .limit(20),
+  );
+});
+
+// getPost Info
+router.get("/post/:id", async (request, response) => {
+  response.json({});
 });
 
 module.exports = router;

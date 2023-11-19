@@ -15,8 +15,8 @@ export const Header = () => {
     });
   }, []);
 
-  const logout = () => {
-    fetch("http://localhost:5000/user/logout", {
+  const logout = async () => {
+    await fetch("http://localhost:5000/user/logout", {
       credentials: "include",
       method: "POST",
     });

@@ -131,7 +131,9 @@ router.get("/getPost", async (request, response) => {
 
 // getPost Info
 router.get("/post/:id", async (request, response) => {
-  response.json({});
+  const { id } = request.params;
+  const postInfo = await Post.findById(id).populate("author", ["email"]);
+  response.json(postInfo);
 });
 
 module.exports = router;

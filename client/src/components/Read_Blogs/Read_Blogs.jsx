@@ -12,6 +12,7 @@ const Read_Blogs = () => {
       });
     });
   }, []);
+
   return (
     <>
       <h2 className="text-dark text-center bg-body-tertiary p-3">Blogs!!!</h2>

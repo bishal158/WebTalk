@@ -6,35 +6,8 @@ import { toast, ToastContainer } from "react-toastify";
 import React from "react";
 import { User_Context } from "../../context/User_Context.jsx";
 
-// const navigator = useNavigate();
-const success_toast = () => {
-  toast.success("Login Successful", {
-    position: "top-right",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    icon: "✔️",
-  });
-};
-const error_toast = () => {
-  toast.error("Login Failed", {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    icon: "❌",
-  });
-};
 export const Login = () => {
-  const { setUserInfo } = useContext(User_Context);
+  const { setUserId, setUserEmail } = useContext(User_Context);
   const [Inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -47,7 +20,7 @@ export const Login = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const navigator = useNavigate();
+
   const login = async (e) => {
     e.preventDefault();
     const response = await fetch("http://localhost:5000/user/login", {
@@ -58,15 +31,11 @@ export const Login = () => {
     })
       .then((response) => {
         if (response.status === 200) {
-          email_ref.current.value = "";
-          password_ref.current.value = "";
           response.json().then((UserInfo) => {
-            setUserInfo(UserInfo.email);
-            navigator("/");
+            setUserEmail(UserInfo.email);
+            setUserId(UserInfo.id);
+            console.log(UserInfo.id);
           });
-        }
-        if (response.status === 409) {
-          error_toast();
         }
       })
       .catch((error) => {});

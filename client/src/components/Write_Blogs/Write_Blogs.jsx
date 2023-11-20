@@ -59,10 +59,10 @@ const Write_Blogs = () => {
   };
   return (
     <>
-      <div className="container">
-        <h3 className={"text-center p-3 mb-3 bg-body-tertiary"}>
-          Write Your Blogs Here
-        </h3>
+      <h3 className={"text-center p-3 mb-3 bg-body-tertiary"}>
+        Write Your Blogs Here
+      </h3>
+      <div className="container p-3 ">
         <form onSubmit={blog_post}>
           <div className="form-floating mb-3">
             <input

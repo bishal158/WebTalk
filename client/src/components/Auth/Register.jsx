@@ -14,38 +14,6 @@ export const Register = () => {
   });
   const email_ref = useRef();
   const password_ref = useRef();
-  const success_toast = () => {
-    toast.success("Registration Successful", {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      onClick: () => {
-        navigator("/login");
-      },
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      icon: "✔️",
-    });
-  };
-  const error_toast = () => {
-    toast.error("User Already Exists, Login!!", {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      onClick: () => {
-        navigator("/login");
-      },
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      icon: "❌",
-    });
-  };
   const handleChange = (e) => {
     setInputs((prevState) => ({
       ...prevState,
@@ -62,12 +30,10 @@ export const Register = () => {
       .then((response) => {
         if (response.status === 200) {
           console.log(response);
-          success_toast();
           email_ref.current.value = "";
           password_ref.current.value = "";
         }
         if (response.status === 409) {
-          error_toast();
         }
       })
       .catch((error) => {});

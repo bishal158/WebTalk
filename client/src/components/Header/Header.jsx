@@ -4,13 +4,15 @@ import { useEffect, useState, useContext } from "react";
 import { User_Context } from "../../context/User_Context.jsx";
 
 export const Header = () => {
-  const { UserInfo, setUserInfo } = useContext(User_Context);
+  const { UserId, setUserId, UserEmail, setUserEmail } =
+    useContext(User_Context);
   useEffect(() => {
     fetch("http://localhost:5000/user/profile", {
       credentials: "include",
     }).then((response) => {
       response.json().then((userData) => {
-        setUserInfo(userData.email);
+        setUserId(userData.id);
+        setUserEmail(userData.email);
       });
     });
   }, []);
@@ -20,7 +22,8 @@ export const Header = () => {
       credentials: "include",
       method: "POST",
     });
-    setUserInfo(null);
+    setUserId(null);
+    setUserEmail(null);
   };
   return (
     <>
@@ -56,7 +59,7 @@ export const Header = () => {
                 </NavLink>
               </li>
 
-              {UserInfo && (
+              {UserId && (
                 <>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="read_blogs">
@@ -83,7 +86,7 @@ export const Header = () => {
             id="navbarNav"
           >
             <ul className="navbar-nav">
-              {!UserInfo && (
+              {!UserId && (
                 <>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="login">
@@ -97,10 +100,10 @@ export const Header = () => {
                   </li>
                 </>
               )}
-              {UserInfo && (
+              {UserId && (
                 <>
                   <li className="nav-item">
-                    <a className="nav-link">{UserInfo}</a>
+                    <a className="nav-link">{UserEmail}</a>
                   </li>
 
                   <button className="logout-button" onClick={logout}>

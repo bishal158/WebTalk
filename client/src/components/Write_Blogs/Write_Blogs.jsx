@@ -4,31 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import ReactQuill from "react-quill";
-import { success_toast } from "../Toast_Message/Toast.jsx";
 import { useNavigate } from "react-router-dom";
-// editor
-let toolbarOptions = [
-  ["bold", "italic", "underline", "strike"], // toggled buttons
-  ["blockquote", "code-block"],
-  ["link", "image", "video"],
-  [{ header: 1 }, { header: 2 }], // custom button values
-  [{ list: "ordered" }, { list: "bullet" }],
-  [{ script: "sub" }, { script: "super" }], // superscript/subscript
-  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-  [{ direction: "rtl" }], // text direction
-
-  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  [{ font: [] }],
-  [{ align: [] }],
-
-  ["clean"], // remove formatting button
-];
-const modules = {
-  toolbar: toolbarOptions,
-};
+import { Editor } from "../../Editor/Editor.jsx";
 const Write_Blogs = () => {
   // states
   const [title, setTitle] = useState("");
@@ -62,7 +39,7 @@ const Write_Blogs = () => {
       <h3 className={"text-center p-3 mb-3 bg-body-tertiary"}>
         Write Your Blogs Here
       </h3>
-      <div className="container p-3 ">
+      <div className="container  ">
         <form onSubmit={blog_post}>
           <div className="form-floating mb-3">
             <input
@@ -108,13 +85,7 @@ const Write_Blogs = () => {
               onChange={(event) => setImages(event.target.files)}
             />
           </div>
-          <ReactQuill
-            modules={modules}
-            name="content"
-            id="content"
-            value={content}
-            onChange={(newValue) => setContent(newValue)}
-          />
+          <Editor onChange={setContent} value={content} />
           <button className="btn btn-secondary p-2 mt-2 w-100" type="submit">
             Post Blog
           </button>

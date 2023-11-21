@@ -1,11 +1,13 @@
 import "./Header.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { User_Context } from "../../context/User_Context.jsx";
 
 export const Header = () => {
+  const navigator = useNavigate();
   const { UserId, setUserId, UserEmail, setUserEmail } =
     useContext(User_Context);
+  const [redirect, setRedirect] = useState(false);
   useEffect(() => {
     fetch("http://localhost:5000/user/profile", {
       credentials: "include",
@@ -24,7 +26,11 @@ export const Header = () => {
     });
     setUserId(null);
     setUserEmail(null);
+    setRedirect(true);
   };
+  if (redirect) {
+    navigator("/");
+  }
   return (
     <>
       <nav className="navbar navbar-expand-lg ">

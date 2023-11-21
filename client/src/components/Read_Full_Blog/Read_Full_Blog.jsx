@@ -1,8 +1,9 @@
 import "./Read_Full_Blog.css";
-import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { User_Context } from "../../context/User_Context.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Read_Full_Blog() {
   const [postInfo, setPostInfo] = useState();
@@ -24,7 +25,10 @@ export function Read_Full_Blog() {
       </h1>
       <div className={"container"}>
         {UserId === postInfo.author._id && (
-          <button className={"button"}>Edit Post</button>
+          <Link to={`/edit/${postInfo._id}`} className={"button"}>
+            <FontAwesomeIcon icon="pen-to-square" className={"mx-1"} />
+            Edit Post
+          </Link>
         )}
         <h2 className={"title"}>{postInfo.title}</h2>
         <time className={"time"}>

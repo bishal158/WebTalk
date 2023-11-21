@@ -45,7 +45,7 @@ const Read_Blogs = () => {
                     <div className="card-body">
                       <p className="card-text">{posts.summary}</p>
                       <p className="card-text">
-                        <a className="author">Author: {posts.author.email}</a>
+                        <a className="author">Author: {posts.author?.email}</a>
                         <time className={"mx-1 p-1"}>
                           {format(
                             new Date(posts.createdAt),

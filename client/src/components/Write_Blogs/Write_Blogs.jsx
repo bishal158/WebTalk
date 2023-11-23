@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import { useNavigate } from "react-router-dom";
-import { Editor } from "../../Editor/Editor.jsx";
+import { Editor } from "../../editor/Editor.jsx";
 const Write_Blogs = () => {
   // states
   const [title, setTitle] = useState("");

@@ -1,12 +1,17 @@
 import "./Login.css";
 import { useRef, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import User from "../../assets/images/User.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import React from "react";
 import { User_Context } from "../../context/User_Context.jsx";
 
 export const Login = () => {
+  const [showPassword, setShowPassword] = useState(true);
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
   const { setUserId, setUserEmail } = useContext(User_Context);
   const [Inputs, setInputs] = useState({
     email: "",
@@ -45,6 +50,9 @@ export const Login = () => {
     <>
       <div className="container">
         <h2 className="login-header">Login Here</h2>
+        {/*<div className={"img-fluid"}>*/}
+        {/*  <img className={"user-image"} src={User} alt={"..."} />*/}
+        {/*</div>*/}
         <form className="login-form" onSubmit={login}>
           <div className="form-floating mb-3">
             <input
@@ -62,7 +70,7 @@ export const Login = () => {
           </div>
           <div className="form-floating mb-3 d-flex">
             <input
-              type="password"
+              type={showPassword ? "password" : "text"}
               className="form-control"
               id="password"
               name="password"
@@ -73,8 +81,15 @@ export const Login = () => {
             <label htmlFor="password">
               <FontAwesomeIcon icon="key" /> Password
             </label>
-            <span className="btn mx-1 p-3 bg-body-tertiary">
-              <FontAwesomeIcon icon="eye" />
+            <span
+              className="btn mx-1 p-3 bg-body-tertiary"
+              onClick={togglePassword}
+            >
+              {showPassword ? (
+                <FontAwesomeIcon icon="eye-slash" />
+              ) : (
+                <FontAwesomeIcon icon="eye" />
+              )}
             </span>
           </div>
 

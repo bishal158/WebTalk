@@ -7,6 +7,10 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
+  const [showPassword, setShowPassword] = useState(true);
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
   const navigator = useNavigate();
   const [Inputs, setInputs] = useState({
     email: "",
@@ -59,7 +63,7 @@ export const Register = () => {
           </div>
           <div className="form-floating mb-3 d-flex">
             <input
-              type="password"
+              type={showPassword ? "password" : "text"}
               className="form-control"
               id="password"
               name="password"
@@ -70,8 +74,15 @@ export const Register = () => {
             <label htmlFor="password">
               <FontAwesomeIcon icon="key" /> Password
             </label>
-            <span className="btn mx-1 p-3 bg-body-tertiary">
-              <FontAwesomeIcon icon="eye" />
+            <span
+              className="btn mx-1 p-3 bg-body-tertiary"
+              onClick={togglePassword}
+            >
+              {showPassword ? (
+                <FontAwesomeIcon icon="eye-slash" />
+              ) : (
+                <FontAwesomeIcon icon="eye" />
+              )}
             </span>
           </div>
 

@@ -2,7 +2,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Editor } from "../../Editor/Editor.jsx";
+import { Editor } from "../../editor/Editor.jsx";
 export function Edit_Blogs() {
   const { id } = useParams();
   // states

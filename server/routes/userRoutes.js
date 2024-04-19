@@ -1,19 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const {
-  login,
-  register,
-} = require("../controllers/userController");
+const { login, register } = require("../controllers/userController");
 
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 router.post("/register", upload.single("avatar"), register);
+router.post("/login", login);
 
 module.exports = router;
-
-
-
-
 
 
 // // registration new users

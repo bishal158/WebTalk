@@ -6,4 +6,4 @@ exports.PORT = PORT;
 exports.MONGODB_CONNECTION = MONGODB_CONNECTION;
 
 // database password : ubpzJKU8kj99EUx8
-// connection string : mongodb+srv://afnanmafuj22:ubpzJKU8kj99EUx8@cluster0.kgnmq78.mongodb.net/web-talk?retryWrites=true&w=majority
+// connection string : mongodb+srv://afnanmafuj22:ubpzJKU8kj99EUx8@cluster0.kgnmq78.mongodb.net

@@ -1,35 +1,34 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
-const { PORT, MONGODB_CONNECTION } = require("../server/config");
+const cookieParser = require("cookie-parser");
+const path = require("path");
 const cors = require("cors");
 const app = express();
-const cookieParser = require("cookie-parser");
-// api routes
-const UserRoutes = require("./routes/User-Routes");
-// models
-const User = require("./models/User");
-// app use
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  }),
-);
-app.use(express.json());
-app.use(cookieParser());
-app.use("/uploads", express.static(__dirname + "/uploads"));
-// middleware
-app.use("/user", UserRoutes);
+dotenv.config();
 
+// port number
+const PORT = process.env.PORT;
+const DATABASE_URL = process.env.MONGODB_CONNECTION;
 // database connection
-mongoose
-  .connect(MONGODB_CONNECTION)
-  .then(() => {
-    console.log("Connected to Database");
-    app.listen(PORT, () => {
-      console.log(`listening on ${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+const connectDb = async () => {
+    try {
+        await mongoose.connect(DATABASE_URL);
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+    }
+};
+connectDb().then((r) => console.log("Connected to Database"));
+app.use(cookieParser());
+app.use(express.json());
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+// set static folder
+app.use("/uploads", express.static(__dirname + "/uploads"));
+// routes
+const userRouter = require("./routes/userRoutes");
+app.use("/user", userRouter);
+app.listen(PORT);
+
+
+// database password : ubpzJKU8kj99EUx8
+// connection string : mongodb+srv://afnanmafuj22:ubpzJKU8kj99EUx8@cluster0.kgnmq78.mongodb.net

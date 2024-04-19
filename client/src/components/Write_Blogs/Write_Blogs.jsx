@@ -24,6 +24,7 @@ const Write_Blogs = () => {
     data.set("summary", summary);
     data.set("content", content);
     data.set("images", images[0]);
+
     e.preventDefault();
     const response = await fetch("http://localhost:5000/user/post", {
       method: "POST",

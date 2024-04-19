@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+aside{
+    transition: all 0.2s ease-in-out;
+}
+aside.close {
+    transform: translateX(-100%);
+    transition: all 0.2s ease-in-out;
+
+}
+
+a {
+    @apply p-2.5 flex rounded-md gap-6 m-2 items-center md:cursor-pointer cursor-default font-medium;
+    background-color: #e0dcf3;
+}
+
+a.active {
+    background-color: #302746;
+    color: #fff;
+}
+
+
+.animate-character {
+    @apply text-center uppercase bg-[linear-gradient(_-225deg,#231557_0%,#44107a_29%,#ff1361_67%,#fff800_100%_)] bg-[auto_auto] bg-clip-border bg-[200%_auto] text-white animate-[textclip_2s_linear_infinite] flex text-[100px];
+    justify-content: start;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+@keyframes textclip {
+    to {
+        @apply bg-[200%_center];
+    }
+}

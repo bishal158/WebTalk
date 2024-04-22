@@ -102,9 +102,11 @@ export const editorInputs = [
     id: "title",
     placeholder: "Give a title",
     icon: "fa-solid fa-file-pen",
-    div_class: "",
-    span_class: "",
-    input_class: "",
+    div_class: "w-full mb-5 flex",
+    span_class:
+      "bg-slate-200 flex justify-center items-center w-10 h-10 border border-gray-300",
+    input_class:
+      "w-full h-10 flex justify-start items-center px-1 py-1 bg-gray-50 border border-gray-300 text-black-900 placeholder:font-bold",
   },
   {
     type: "file",
@@ -112,9 +114,11 @@ export const editorInputs = [
     id: "cover",
     placeholder: "Set a cover",
     icon: "fa-solid fa-file-image",
-    div_class: "",
-    span_class: "",
-    input_class: "",
+    div_class: "w-full mb-5 flex",
+    span_class:
+      "bg-slate-200 flex justify-center items-center w-10 h-10 border border-gray-300",
+    input_class:
+      "w-full h-10 flex justify-start items-center  px-1 py-1 bg-gray-50 border border-gray-300 text-black-900 placeholder:font-bold",
   },
   {
     type: "text",
@@ -122,8 +126,10 @@ export const editorInputs = [
     id: "summary",
     placeholder: "Give a summary",
     icon: "fa-solid fa-clipboard-list",
-    div_class: "",
-    span_class: "",
-    input_class: "",
+    div_class: "w-full mb-5 flex",
+    span_class:
+      "bg-slate-200 flex justify-center items-center w-10 h-10 border border-gray-300",
+    input_class:
+      "w-full h-10 flex justify-start items-center px-1 py-1  bg-gray-50 border border-gray-300 text-black-900 placeholder:font-bold",
   },
 ];

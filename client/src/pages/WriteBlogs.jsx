@@ -1,11 +1,18 @@
 import { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { editorInit } from "../constants/constants.js";
-import register_img from "../assets/images/Sign up.gif";
+import writing_img from "../assets/images/Write.gif";
 import { editorInputs } from "../constants/inputs.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { registerUser } from "../redux/authSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import { savePost } from "../redux/postSlice.js";
 
 export const WriteBlogs = () => {
+  const dispatch = useDispatch();
+  const { isLoading, error, success, posts } = useSelector(
+    (state) => state.post,
+  );
   const editorRef = useRef(null);
   const [blog, setBlog] = useState({
     title: "",
@@ -36,14 +43,30 @@ export const WriteBlogs = () => {
     blogData.append("cover", blog.cover);
     blogData.append("summary", blog.summary);
     blogData.append("content", editorRef.current.getContent());
+    try {
+      await dispatch(savePost(blogData));
+    } catch (err) {
+      console.log(err);
+    }
     // console.log(blogData.get("content"));
   };
 
   return (
     <div>
-      <section className={""}>
-        <div className={""}>
-          <form onSubmit={blog_post}>
+      <section
+        className={
+          "w-full h-full flex flex-wrap justify-start items-center px-2 py-4 md:px-1.5 "
+        }
+      >
+        <div
+          className={
+            "w-full h-full flex flex-col justify-center items-center overflow-hidden md:w-3/4 md:h-full"
+          }
+        >
+          <form
+            onSubmit={blog_post}
+            className={"w-full h-full flex flex-wrap flex-col"}
+          >
             {editorInputs.map((field, index) => {
               return (
                 <div className={field.div_class} key={index}>
@@ -73,11 +96,17 @@ export const WriteBlogs = () => {
               id={"content"}
               init={editorInit}
             />
-            <button>dadadad</button>
+            <button
+              className={
+                "w-full md:w-[16rem] p-2 mb-5 bg-indigo-50 text-white rounded mt-2 valid:bg-indigo-950"
+              }
+            >
+              Post
+            </button>
           </form>
         </div>
-        <div>
-          <img src={register_img} className={""} alt={".."} />
+        <div className={"w-full h-full  md:w-3/12 md:h-full"}>
+          <img src={writing_img} className={""} alt={".."} />
         </div>
       </section>
     </div>

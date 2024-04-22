@@ -2,10 +2,22 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const PostSchema = new Schema(
   {
-    title: String,
-    summary: String,
-    content: String,
-    images: String,
+    title: {
+      type: String,
+      required: true,
+    },
+    summary: {
+      type: String,
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    cover: {
+      type: String,
+      required: true,
+    },
     author: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {

@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Post = require("../models/post");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
@@ -80,6 +81,52 @@ const login = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+const savePost = async (req, res, next) => {
+  const { originalname, path } = req.file;
+  const parts = originalname.split(".");
+  const extension = parts[parts.length - 1];
+  const newPath = path + "." + extension;
+  filesystem.renameSync(path, newPath);
+  const { token } = req.cookies;
+  jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
+    if (error) throw error;
+    const { title, summary, content } = req.body;
+    try {
+      const post = await Post.create({
+        title,
+        summary,
+        content,
+        cover: newPath,
+        author: info._id,
+      });
+      res.status(201).json(post);
+    } catch (e) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+};
+// router.post("/post", upload.single("images"), async (request, response) => {
+//   const { originalname, path } = request.file;
+//   const parts = originalname.split(".");
+//   const extension = parts[parts.length - 1];
+//   const newPath = path + "." + extension;
+//   filesystem.renameSync(path, newPath);
+//
+//   const { token } = request.cookies;
+//   jwt.verify(token, SECRET_KEY, {}, async (error, info) => {
+//     if (error) throw error;
+//     const { title, summary, content } = request.body;
+//     const post = await Post.create({
+//       title,
+//       summary,
+//       content,
+//       images: newPath,
+//       author: info.id,
+//     });
+//     response.json(post);
+//   });
+// });
+//
 exports.register = register;
 exports.login = login;
+exports.savePost = savePost;

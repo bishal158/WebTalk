@@ -1,9 +1,9 @@
 import register_img from "../assets/images/Sign up.gif";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { inputs } from "../constants/inputs.js";
-import { loginUser, registerUser } from "../redux/authSlice.js";
+import { Link, redirect, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { loginInputs } from "../constants/inputs.js";
+import { loginUser } from "../redux/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 
 export const Login = () => {
@@ -17,16 +17,24 @@ export const Login = () => {
     email: "",
     password: "",
   });
+  // const [user, setUser] = useState([]);
+  // useEffect(() => {
+  //   return () => {
+  //     let userInfo = localStorage.getItem("userInfo");
+  //     setUser(JSON.parse(userInfo));
+  //   };
+  // }, [user]);
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
   const login = async (e) => {
     e.preventDefault();
-    console.log(input);
     try {
       await dispatch(loginUser(input));
       if (userInfo) {
-        navigate("/");
+        return redirect("/read-blogs");
+      } else {
+        return redirect("/login");
       }
     } catch (err) {
       console.log(err);
@@ -60,7 +68,7 @@ export const Login = () => {
               }
               onSubmit={login}
             >
-              {inputs.map((field, index) => {
+              {loginInputs.map((field, index) => {
                 return (
                   <div key={index} className={field.div_class}>
                     <span className={field.span_class}>
@@ -80,7 +88,13 @@ export const Login = () => {
                         className={field.span_class}
                         onClick={handleShowPassword}
                       >
-                        <FontAwesomeIcon icon={field.icon_2} />
+                        <FontAwesomeIcon
+                          icon={
+                            showPassword
+                              ? field.icon_2
+                              : "fa-solid fa-eye-slash"
+                          }
+                        />
                       </span>
                     ) : null}
                   </div>
@@ -91,7 +105,7 @@ export const Login = () => {
                   "w-[16rem] p-2 mb-5 bg-indigo-50 text-white rounded valid:bg-indigo-950"
                 }
               >
-                Login
+                {isLoading ? "Loading..." : "Login"}
               </button>
               <p className={"w-full h-auto flex justify-center items-center"}>
                 <span>Don't have a account? </span>

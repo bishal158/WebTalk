@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "mentor-mind";
+JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
 const filesystem = require("fs");
 
 const register = async (req, res, next) => {
@@ -24,7 +24,7 @@ const register = async (req, res, next) => {
     if (existingUser) {
       res.status(409).json({ message: " Email already registered" });
     } else {
-      const admin = await User.create({
+      const user = await User.create({
         name,
         email,
         avatar: newPath,
@@ -38,11 +38,47 @@ const register = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const userInfo = {
-    name: "user",
-    email: "user@example.com",
-  };
-  res.status(200).json(userInfo);
+  const { email, password } = req.body;
+  console.log(email, password);
+  try {
+    const user = await User.findOne({ email: email });
+    if (user && user._id) {
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      console.log(isValidPassword);
+      if (isValidPassword) {
+        // prepare admin information object for token
+        const userInfo = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: process.env.BASE_URL + user.avatar,
+          role: "user",
+          isLoggedIn: true,
+        };
+        // generate token
+        const token = jwt.sign(userInfo, process.env.JWT_SECRET_KEY, {
+          // expiresIn: process.env.JWT_EXPIRATION,
+        });
+        console.log(token);
+        // set cookie
+        res
+          .status(200)
+          .cookie("token", token, {
+            // expiresIn: process.env.JWT_EXPIRATION,
+            // maxAge: process.env.JWT_EXPIRATION,
+            // // signed: true,
+            // httpOnly: true,
+          })
+          .json(userInfo);
+      } else {
+        res.status(408).json({ message: "Password dose not matched" });
+      }
+    } else {
+      res.status(404).json({ message: "Email not found" });
+    }
+  } catch (e) {
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 exports.register = register;

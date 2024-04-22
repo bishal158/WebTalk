@@ -12,7 +12,7 @@ A Full-Stack Blogging Application Built with MERN Stack.This is a fully function
   - Node.js: JavaScript runtime environment
     
 # Web Talk Links
-- Go to the given link to see the progress of the project https://6543c12da7f08c00081c3010--dazzling-tiramisu-83b51b.netlify.app/
+- Go to the given link to see the progress of the project https://web-talk-three.vercel.app/
 # Web Talk Video Recording: 
  https://github.com/bishal158/WebTalk/assets/67275108/893f7644-c8d9-4941-a4e4-8a9d9d7d948e
 

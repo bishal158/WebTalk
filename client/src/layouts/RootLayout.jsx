@@ -15,6 +15,7 @@ export const RootLayout = ({ children }) => {
   return (
     <div>
       <SideBar />
+
       <main className={"h-screen w-full flex flex-col"}>
         <nav
           className={

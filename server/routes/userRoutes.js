@@ -1,12 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { login, register, savePost } = require("../controllers/userController");
+const {
+  login,
+  register,
+  savePost,
+  getAllPosts,
+} = require("../controllers/userController");
 
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 router.post("/register", upload.single("avatar"), register);
 router.post("/login", login);
 router.post("/savePost", upload.single("cover"), savePost);
+router.get("/getAllPost", getAllPosts);
 module.exports = router;
 
 

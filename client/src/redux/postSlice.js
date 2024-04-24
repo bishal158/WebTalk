@@ -15,6 +15,10 @@ export const savePost = createAsyncThunk(
     }
   },
 );
+export const getAllPosts = createAsyncThunk("post/getAllPosts", async () => {
+  const response = await axios.get(base_url + "/user/getAllPost");
+  return response.data;
+});
 
 const postSlice = createSlice({
   name: "post",
@@ -26,19 +30,44 @@ const postSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
+    /** save a post **/
     builder
       .addCase(savePost.pending, (state, action) => {
         state.isLoading = true;
+        state.success = false;
+        state.error = null;
+        state.posts = [];
       })
       .addCase(savePost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.posts = [action.payload];
+        state.error = null;
+        state.posts = action.payload;
       })
       .addCase(savePost.rejected, (state, action) => {
         state.error = action.payload;
         state.success = false;
+        state.error = null;
         state.posts = [];
+      })
+      /** fetch all posts **/
+      .addCase(getAllPosts.pending, (state, action) => {
+        state.posts = [];
+        state.success = false;
+        state.error = null;
+        state.isLoading = true;
+      })
+      .addCase(getAllPosts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+        state.error = null;
+        state.posts = action.payload;
+      })
+      .addCase(getAllPosts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+        state.posts = [];
+        state.error = action.payload;
       });
   },
 });

@@ -10,6 +10,10 @@ const PostSchema = new Schema(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+    },
     content: {
       type: String,
       required: true,
@@ -17,6 +21,10 @@ const PostSchema = new Schema(
     cover: {
       type: String,
       required: true,
+    },
+    likes: {
+      type: Number,
+      default: 0,
     },
     author: { type: Schema.Types.ObjectId, ref: "User" },
   },

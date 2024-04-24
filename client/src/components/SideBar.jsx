@@ -29,7 +29,7 @@ export const SideBar = () => {
     <aside
       id={"sidebar"}
       className={
-        "bg-white text-gray shadow-xl z-[999] max-w-[16rem] w-[16rem] h-screen overflow-hidden fixed  dark:bg-[#1f1f1A] dark:text-[#fff]"
+        "bg-white text-gray shadow-xl z-[999] max-w-[16rem] w-[16rem] h-screen overflow-hidden fixed dark:bg-[#1f1f1A] dark:text-[#fff]"
       }
     >
       {/*Collapse Button*/}

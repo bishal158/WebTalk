@@ -133,3 +133,34 @@ export const editorInputs = [
       "w-full h-10 flex justify-start items-center px-1 py-1  bg-gray-50 border border-gray-300 text-black-900 placeholder:font-bold",
   },
 ];
+// Categories
+
+export const categories = [
+  {
+    value: "All",
+  },
+  {
+    value: "Technology",
+  },
+  {
+    value: "Fiction",
+  },
+  {
+    value: "Geopolitics ",
+  },
+  {
+    value: "Geopolitics ",
+  },
+  {
+    value: "Geopolitics ",
+  },
+  {
+    value: "Geopolitics ",
+  },
+  {
+    value: "Geopolitics ",
+  },
+  {
+    value: "Geopolitics ",
+  },
+];

@@ -8,9 +8,10 @@
     box-sizing: border-box;
 }
 
-aside{
+aside {
     transition: all 0.2s ease-in-out;
 }
+
 aside.close {
     transform: translateX(-100%);
     transition: all 0.2s ease-in-out;
@@ -20,6 +21,10 @@ aside.close {
 a {
     @apply p-2.5 flex rounded-md gap-6 m-2 items-center md:cursor-pointer cursor-default font-medium;
     background-color: #e0dcf3;
+}
+
+li.active {
+    color: dodgerblue;
 }
 
 a.active {
@@ -34,6 +39,7 @@ a.active {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
 @keyframes textclip {
     to {
         @apply bg-[200%_center];

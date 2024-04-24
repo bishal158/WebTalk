@@ -17,13 +17,13 @@ export const Login = () => {
     email: "",
     password: "",
   });
-  // const [user, setUser] = useState([]);
-  // useEffect(() => {
-  //   return () => {
-  //     let userInfo = localStorage.getItem("userInfo");
-  //     setUser(JSON.parse(userInfo));
-  //   };
-  // }, [user]);
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/read-blogs");
+    } else {
+      navigate("/login");
+    }
+  }, [userInfo]);
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -31,11 +31,6 @@ export const Login = () => {
     e.preventDefault();
     try {
       await dispatch(loginUser(input));
-      if (userInfo) {
-        return redirect("/read-blogs");
-      } else {
-        return redirect("/login");
-      }
     } catch (err) {
       console.log(err);
     }

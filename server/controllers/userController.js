@@ -82,6 +82,7 @@ const login = async (req, res, next) => {
   }
 };
 const savePost = async (req, res, next) => {
+  console.log(req.file);
   const { originalname, path } = req.file;
   const parts = originalname.split(".");
   const extension = parts[parts.length - 1];
@@ -90,11 +91,12 @@ const savePost = async (req, res, next) => {
   const { token } = req.cookies;
   jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
     if (error) throw error;
-    const { title, summary, content } = req.body;
+    const { title, summary, content, category } = req.body;
     try {
       const post = await Post.create({
         title,
         summary,
+        category,
         content,
         cover: newPath,
         author: info._id,
@@ -105,28 +107,14 @@ const savePost = async (req, res, next) => {
     }
   });
 };
-// router.post("/post", upload.single("images"), async (request, response) => {
-//   const { originalname, path } = request.file;
-//   const parts = originalname.split(".");
-//   const extension = parts[parts.length - 1];
-//   const newPath = path + "." + extension;
-//   filesystem.renameSync(path, newPath);
-//
-//   const { token } = request.cookies;
-//   jwt.verify(token, SECRET_KEY, {}, async (error, info) => {
-//     if (error) throw error;
-//     const { title, summary, content } = request.body;
-//     const post = await Post.create({
-//       title,
-//       summary,
-//       content,
-//       images: newPath,
-//       author: info.id,
-//     });
-//     response.json(post);
-//   });
-// });
-//
+const getAllPosts = async (req, res, next) => {
+  try {
+    const posts = await Post.find().populate("author").sort({ createdAt: -1 });
+    res.status(201).json(posts);
+  } catch (e) {}
+};
+
 exports.register = register;
 exports.login = login;
 exports.savePost = savePost;
+exports.getAllPosts = getAllPosts;

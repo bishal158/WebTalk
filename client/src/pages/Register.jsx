@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux/authSlice.js";
-import { ErrorToast } from "../helpers/ErrorToast.jsx";
 import { registerInputs } from "../constants/inputs.js";
 
 export const Register = () => {

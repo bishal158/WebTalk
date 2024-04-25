@@ -111,10 +111,35 @@ const getAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.find().populate("author").sort({ createdAt: -1 });
     res.status(201).json(posts);
-  } catch (e) {}
+  } catch (e) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+const getFilteredPosts = async (req, res, next) => {
+  const { category } = req.query;
+  const filter = {};
+  if (category) {
+    filter.category = category;
+  }
+  try {
+    if (category === "All") {
+      const posts = await Post.find()
+        .populate("author")
+        .sort({ createdAt: -1 });
+      res.status(200).json(posts);
+    } else {
+      const filteredPosts = await Post.find(filter)
+        .populate("author")
+        .sort({ createdAt: -1 });
+      res.status(200).json(filteredPosts);
+    }
+  } catch (e) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 exports.register = register;
 exports.login = login;
 exports.savePost = savePost;
 exports.getAllPosts = getAllPosts;
+exports.getFilteredPosts = getFilteredPosts;

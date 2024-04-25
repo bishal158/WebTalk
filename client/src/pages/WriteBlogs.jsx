@@ -83,6 +83,7 @@ export const WriteBlogs = () => {
                     name={field.name}
                     id={field.id}
                     placeholder={field.placeholder}
+                    maxLength={field.maxLength}
                     onChange={
                       field.type === "file"
                         ? handleProfilePictureChange

@@ -2,7 +2,7 @@ import hero_section from "../assets/images/Hero.gif";
 import { socials } from "../constants/constants.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const Hero_Section = () => {
+export const HeroSection = () => {
   return (
     <div
       className={

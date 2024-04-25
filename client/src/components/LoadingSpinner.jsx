@@ -1,5 +1,4 @@
-import "./Loading_Spinner.css";
-export const Loading_Spinner = () => {
+export const LoadingSpinner = () => {
   return (
     <>
       <div className="spinner-container">

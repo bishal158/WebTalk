@@ -47,7 +47,7 @@ function App() {
     //       <Route
     //         path="read_blogs"
     //         element={
-    //           <React.Suspense fallback={<Loading_Spinner />}>
+    //           <React.Suspense fallback={<LoadingSpinner />}>
     //             <Read_Blogs />
     //           </React.Suspense>
     //         }
@@ -55,7 +55,7 @@ function App() {
     //       <Route
     //         path="write_blogs"
     //         element={
-    //           <React.Suspense fallback={<Loading_Spinner />}>
+    //           <React.Suspense fallback={<LoadingSpinner />}>
     //             <Write_Blogs />
     //           </React.Suspense>
     //         }
@@ -63,7 +63,7 @@ function App() {
     //       <Route
     //         path="contact_us"
     //         element={
-    //           <React.Suspense fallback={<Loading_Spinner />}>
+    //           <React.Suspense fallback={<LoadingSpinner />}>
     //             <Contact_Us />
     //           </React.Suspense>
     //         }

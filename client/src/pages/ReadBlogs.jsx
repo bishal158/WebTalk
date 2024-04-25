@@ -1,24 +1,28 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllPosts } from "../redux/postSlice.js";
+import { getAllPosts, getFilteredPosts } from "../redux/postSlice.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { categories } from "../constants/inputs.js";
 import { base_url } from "../constants/constants.js";
 import { format } from "date-fns";
 import moment from "moment-timezone";
+import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
+import { Link } from "react-router-dom";
 
 export const ReadBlogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBy, setFilterBy] = useState("");
+  const [filterBy, setFilterBy] = useState("All");
   const dispatch = useDispatch();
   const { posts, isLoading, error } = useSelector((state) => state.post);
   useEffect(() => {
     dispatch(getAllPosts());
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(getFilteredPosts(filterBy));
+  }, [filterBy]);
   const filterPost = (value) => {
     setFilterBy(value);
   };
-
   return (
     <div>
       <section className={"w-full h-screen flex flex-wrap gap-0 "}>
@@ -34,12 +38,12 @@ export const ReadBlogs = () => {
           />
           <div
             className={
-              "w-full h-fit flex md:flex-col  md:overflow-hidden overflow-auto list-none mt-1.5 bg-gray-300"
+              "w-full h-fit flex flex-wrap list-none mt-1.5 bg-[#fff] p-2 items-center justify-start"
             }
           >
             <li
               className={
-                "w-full h-12 flex items-center text-2xl text-start font-bold border-r-2 md:border-b-2 p-1"
+                "w-full h-12 flex items-center text-2xl text-start font-bold p-1"
               }
             >
               Topics
@@ -48,7 +52,7 @@ export const ReadBlogs = () => {
               return (
                 <li
                   key={index}
-                  className={`w-full h-12 flex justify-start items-center border-r-2 md:border-b-2 p-1 font-medium text-black border-white m-0.5 cursor-pointer`}
+                  className={`max-w-full h-[40px] flex justify-start items-center  px-3 font-medium text-[#ffffff] border-white m-0.5 cursor-pointer bg-[#1f1f1a]  rounded`}
                   id={"category"}
                   onClick={() => filterPost(category.value)}
                 >
@@ -70,40 +74,90 @@ export const ReadBlogs = () => {
             Filter By &#8594; "{filterBy}"
           </h4>
           <div className={"w-full h-full p-4 flex flex-col"}>
-            {posts.map((post, index) => {
-              return (
-                <div
-                  key={index}
-                  className={
-                    "flex w-full h-fit bg-[#ffffff] shadow-sky-50 rounded-2xl shadow-xl mb-2 flex-col md:flex-row "
-                  }
-                >
-                  <div className={"w-full h-full md:w-1/5"}>
-                    <img
-                      src={base_url + "/" + post.cover}
-                      className={"w-full h-full py-1 rounded"}
-                      alt={"ssss"}
-                    />
-                  </div>
-                  <div className={"md:w-3/5 h-full w-full px-2"}>
-                    <h1>{post.title}</h1>
-                    <p className={"w-full text-justify"}>{post.summary}</p>
-                    <p
+            {isLoading ? <LoadingSpinner /> : null}
+            {posts.length > 0 &&
+              posts.map((post, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={
+                      "flex w-full h-fit bg-[#f9fafb] shadow-[#FFFFFF] rounded-2xl shadow-xl mb-2 flex-col md:flex-row "
+                    }
+                  >
+                    <div
                       className={
-                        "w-full font-bold p-2 flex items-center justify-between"
+                        "w-full h-full md:w-1/5 flex justify-center items-center p-4 "
                       }
                     >
-                      <span className={"text-red-800"}>{post.author.name}</span>
-                      <time>
-                        {moment(post.createdAt).format(
-                          "Do MMM YYYY dddd h:mm A ",
-                        )}
-                      </time>
-                    </p>
+                      <img
+                        src={base_url + "/" + post.cover}
+                        className={"w-full h-full rounded-[10px]"}
+                        alt={"ssss"}
+                      />
+                    </div>
+                    <div className={"md:w-4/5 h-full w-full px-2"}>
+                      <h1
+                        className={
+                          "w-full h-auto flex justify-start items-center font-bold text-[22px] "
+                        }
+                      >
+                        {post.title}
+                      </h1>
+                      <p
+                        className={
+                          "w-full text-justify font-medium text-[18px]"
+                        }
+                      >
+                        {post.summary}
+                      </p>
+                      <div
+                        className={
+                          "w-full font-bold flex items-center justify-between"
+                        }
+                      >
+                        <div className={"w-4/5 py-2 flex items-center"}>
+                          <img
+                            className={
+                              "w-10 h-10 rounded-full border-blue-950 border-2 mx-1"
+                            }
+                            src={base_url + "/" + post.author.avatar}
+                            alt={"...."}
+                          />
+                          <span className={"w-auto text-red-800"}>
+                            {post.author.name}
+                          </span>
+                        </div>
+                        <span
+                          className={
+                            "w-auto flex items-center justify-center text-[16px] text-blue-800"
+                          }
+                        >
+                          <FontAwesomeIcon
+                            icon="fa-solid fa-thumbs-up"
+                            size={"lg"}
+                            className={"mx-1"}
+                          />
+                          {post.likes}
+                        </span>
+                      </div>
+                      <div
+                        className={"w-full flex items-center justify-between "}
+                      >
+                        <p>
+                          <time className={"text-[14px]"}>
+                            {moment(post.createdAt).format(
+                              "Do MMM YYYY ddd h:mm A ",
+                            )}
+                          </time>
+                        </p>
+                        <Link className={""} to={`/post/${post._id}`}>
+                          Read More
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       </section>

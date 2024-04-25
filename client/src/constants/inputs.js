@@ -100,6 +100,7 @@ export const editorInputs = [
     type: "text",
     name: "title",
     id: "title",
+    maxlength: 60,
     placeholder: "Give a title",
     icon: "fa-solid fa-file-pen",
     div_class: "w-full mb-5 flex",
@@ -113,6 +114,7 @@ export const editorInputs = [
     name: "cover",
     id: "cover",
     placeholder: "Set a cover",
+    maxLength: 100,
     icon: "fa-solid fa-file-image",
     div_class: "w-full mb-5 flex",
     span_class:
@@ -124,6 +126,7 @@ export const editorInputs = [
     type: "text",
     name: "summary",
     id: "summary",
+    maxlength: 260,
     placeholder: "Give a summary",
     icon: "fa-solid fa-clipboard-list",
     div_class: "w-full mb-5 flex",
@@ -146,19 +149,19 @@ export const categories = [
     value: "Fiction",
   },
   {
-    value: "Geopolitics ",
+    value: "Software Engineer",
   },
   {
-    value: "Geopolitics ",
+    value: "Global Warming",
   },
   {
-    value: "Geopolitics ",
+    value: "Gaming Industry ",
   },
   {
-    value: "Geopolitics ",
+    value: "Palestine vs Israel",
   },
   {
-    value: "Geopolitics ",
+    value: "Russia vs Nato",
   },
   {
     value: "Geopolitics ",

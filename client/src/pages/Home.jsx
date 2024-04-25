@@ -1,9 +1,9 @@
-import {Hero_Section} from "../components/Hero_Section.jsx";
+import { HeroSection } from "../components/HeroSection.jsx";
 
 export const Home = () => {
-    return (
-        <>
-            <Hero_Section/>
-        </>
-    )
-}
+  return (
+    <>
+      <HeroSection />
+    </>
+  );
+};

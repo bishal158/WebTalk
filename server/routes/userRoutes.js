@@ -6,6 +6,7 @@ const {
   savePost,
   getAllPosts,
   getFilteredPosts,
+  getSinglePost,
 } = require("../controllers/userController");
 
 const multer = require("multer");
@@ -15,6 +16,7 @@ router.post("/login", login);
 router.post("/savePost", upload.single("cover"), savePost);
 router.get("/getAllPost", getAllPosts);
 router.get("/getFilteredPosts", getFilteredPosts);
+router.get("/getSinglePost/:id", getSinglePost);
 module.exports = router;
 
 

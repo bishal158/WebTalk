@@ -17,26 +17,29 @@ import { Post } from "./pages/Post.jsx";
 
 function App() {
   return (
-    <RootLayout>
-      <Routes>
-        <Route path={"/"} element={<Home />} />
-        <Route path={"/login"} element={<Login />} />
-        <Route path={"/register"} element={<Register />} />
-        <Route
-          path={"/read-blogs"}
-          element={<Protected Component={ReadBlogs} />}
-        />
-        <Route path={"/post/:id"} element={<Protected Component={Post} />} />
-        <Route
-          path={"/write-blogs"}
-          element={<Protected Component={WriteBlogs} />}
-        />
-        <Route
-          path="/post/edit/:id"
-          element={<Protected Component={EditBlog} />}
-        />
-      </Routes>
-    </RootLayout>
+    <>
+      <RootLayout>
+        <Routes>
+          <Route path={"/"} element={<Home />} />
+          <Route path={"/login"} element={<Login />} />
+          <Route path={"/register"} element={<Register />} />
+          <Route
+            path={"/read-blogs"}
+            element={<Protected Component={ReadBlogs} />}
+          />
+          <Route path={"/post/:id"} element={<Protected Component={Post} />} />
+          <Route
+            path={"/write-blogs"}
+            element={<Protected Component={WriteBlogs} />}
+          />
+          <Route
+            path="/post/edit/:id"
+            element={<Protected Component={EditBlog} />}
+          />
+        </Routes>
+      </RootLayout>
+    </>
+
     // <User_Context_Provider>
     //   <header>
     //     <Header />

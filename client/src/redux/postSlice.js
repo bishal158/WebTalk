@@ -29,12 +29,23 @@ export const getAllPosts = createAsyncThunk(
 export const getFilteredPosts = createAsyncThunk(
   "post/getFilteredPosts",
   async (category, thunkAPI) => {
-    console.log(category);
     try {
       const posts = await axios.get(
         base_url + `/user/getFilteredPosts/?category=${category}`,
       );
       return posts.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
+export const getSinglePost = createAsyncThunk(
+  "post/getSinglePost",
+  async (id, thunkAPI) => {
+    console.log(id);
+    try {
+      const postInfo = await axios.get(base_url + `/user/getSinglePost/${id}`);
+      return postInfo.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
     }
@@ -47,6 +58,7 @@ const postSlice = createSlice({
     isLoading: false,
     error: null,
     success: false,
+    postInfo: null,
     posts: [],
   },
   reducers: {},
@@ -87,9 +99,10 @@ const postSlice = createSlice({
       .addCase(getAllPosts.rejected, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.posts = [];
+        state.posts = [...state.posts];
         state.error = action.payload;
       })
+      /** filtered Posts **/
       .addCase(getFilteredPosts.pending, (state, action) => {
         state.posts = [...state.posts];
         state.success = false;
@@ -105,8 +118,29 @@ const postSlice = createSlice({
       .addCase(getFilteredPosts.rejected, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.posts = [];
+        state.posts = [...state.posts];
         state.error = action.payload;
+      })
+      .addCase(getSinglePost.pending, (state, action) => {
+        state.posts = [...state.posts];
+        state.success = false;
+        state.error = null;
+        state.isLoading = true;
+        state.postInfo = null;
+      })
+      .addCase(getSinglePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+        state.error = null;
+        state.posts = [...state.posts];
+        state.postInfo = action.payload;
+      })
+      .addCase(getSinglePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+        state.posts = [...state.posts];
+        state.error = action.payload;
+        state.postInfo = null;
       });
   },
 });

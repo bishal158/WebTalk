@@ -76,88 +76,106 @@ export const ReadBlogs = () => {
           <div className={"w-full h-full p-4 flex flex-col"}>
             {isLoading ? <LoadingSpinner /> : null}
             {posts.length > 0 &&
-              posts.map((post, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={
-                      "flex w-full h-fit bg-[#f9fafb] shadow-[#FFFFFF] rounded-2xl shadow-xl mb-2 flex-col md:flex-row "
-                    }
-                  >
+              posts
+                .filter((post) => {
+                  if (searchTerm === "") {
+                    return post;
+                  } else if (
+                    post.title.toLowerCase().includes(searchTerm.toLowerCase())
+                  ) {
+                    return post;
+                  } else if (
+                    post.author.name
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  ) {
+                    return post;
+                  }
+                })
+                .map((post) => {
+                  return (
                     <div
+                      key={post._id}
                       className={
-                        "w-full h-full md:w-1/5 flex justify-center items-center p-4 "
+                        "flex w-full h-fit bg-[#f9fafb] shadow-[#FFFFFF] rounded-2xl shadow-xl mb-2 flex-col md:flex-row "
                       }
                     >
-                      <img
-                        src={base_url + "/" + post.cover}
-                        className={"w-full h-full rounded-[10px]"}
-                        alt={"ssss"}
-                      />
-                    </div>
-                    <div className={"md:w-4/5 h-full w-full px-2"}>
-                      <h1
-                        className={
-                          "w-full h-auto flex justify-start items-center font-bold text-[22px] "
-                        }
-                      >
-                        {post.title}
-                      </h1>
-                      <p
-                        className={
-                          "w-full text-justify font-medium text-[18px]"
-                        }
-                      >
-                        {post.summary}
-                      </p>
                       <div
                         className={
-                          "w-full font-bold flex items-center justify-between"
+                          "w-full h-full md:w-1/5 flex justify-center items-center p-4 "
                         }
                       >
-                        <div className={"w-4/5 py-2 flex items-center"}>
-                          <img
-                            className={
-                              "w-10 h-10 rounded-full border-blue-950 border-2 mx-1"
-                            }
-                            src={base_url + "/" + post.author.avatar}
-                            alt={"...."}
-                          />
-                          <span className={"w-auto text-red-800"}>
-                            {post.author.name}
-                          </span>
-                        </div>
-                        <span
+                        <img
+                          src={base_url + "/" + post.cover}
+                          className={"w-full h-full rounded-[10px]"}
+                          alt={"ssss"}
+                        />
+                      </div>
+                      <div className={"md:w-4/5 h-full w-full px-2"}>
+                        <h1
                           className={
-                            "w-auto flex items-center justify-center text-[16px] text-blue-800"
+                            "w-full h-auto flex justify-start items-center font-bold text-[22px] "
                           }
                         >
-                          <FontAwesomeIcon
-                            icon="fa-solid fa-thumbs-up"
-                            size={"lg"}
-                            className={"mx-1"}
-                          />
-                          {post.likes}
-                        </span>
-                      </div>
-                      <div
-                        className={"w-full flex items-center justify-between "}
-                      >
-                        <p>
-                          <time className={"text-[14px]"}>
-                            {moment(post.createdAt).format(
-                              "Do MMM YYYY ddd h:mm A ",
-                            )}
-                          </time>
+                          {post.title}
+                        </h1>
+                        <p
+                          className={
+                            "w-full text-justify font-medium text-[18px]"
+                          }
+                        >
+                          {post.summary}
                         </p>
-                        <Link className={""} to={`/post/${post._id}`}>
-                          Read More
-                        </Link>
+                        <div
+                          className={
+                            "w-full font-bold flex items-center justify-between"
+                          }
+                        >
+                          <div className={"w-4/5 py-2 flex items-center"}>
+                            <img
+                              className={
+                                "w-10 h-10 rounded-full border-blue-950 border-2 mx-1"
+                              }
+                              src={base_url + "/" + post.author.avatar}
+                              alt={"...."}
+                            />
+                            <span className={"w-auto text-red-800"}>
+                              {post.author.name}
+                            </span>
+                          </div>
+                          <span
+                            className={
+                              "w-auto flex items-center justify-center text-[16px] text-blue-800"
+                            }
+                          >
+                            <FontAwesomeIcon
+                              icon="fa-solid fa-thumbs-up"
+                              size={"lg"}
+                              className={"mx-1"}
+                            />
+                            {post.likes}
+                          </span>
+                        </div>
+                        <div
+                          className={
+                            "w-full flex items-center justify-between "
+                          }
+                        >
+                          <p>
+                            <time className={"text-[14px] font-bold"}>
+                              {moment(post.createdAt).format(
+                                "Do MMM, YYYY ddd, hh:mm A ",
+                              )}
+                            </time>
+                          </p>
+                          <Link className={""} to={`/post/${post._id}`}>
+                            Read More
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
           </div>
         </div>
       </section>

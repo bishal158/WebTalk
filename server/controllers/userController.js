@@ -120,6 +120,7 @@ const getFilteredPosts = async (req, res, next) => {
   const filter = {};
   if (category) {
     filter.category = category;
+    console.log(filter);
   }
   try {
     if (category === "All") {
@@ -132,14 +133,30 @@ const getFilteredPosts = async (req, res, next) => {
         .populate("author")
         .sort({ createdAt: -1 });
       res.status(200).json(filteredPosts);
+      console.log(filteredPosts);
     }
   } catch (e) {
     res.status(500).json({ message: "Server error" });
   }
 };
-
+const getSinglePost = async (req, res, next) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const postInfo = await Post.findById(id).populate("author");
+    console.log(postInfo);
+    if (postInfo) {
+      res.status(200).json(postInfo);
+    } else {
+      res.status(404).json({ message: "Opps!!!Post not available" });
+    }
+  } catch (e) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 exports.register = register;
 exports.login = login;
 exports.savePost = savePost;
 exports.getAllPosts = getAllPosts;
 exports.getFilteredPosts = getFilteredPosts;
+exports.getSinglePost = getSinglePost;

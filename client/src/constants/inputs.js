@@ -152,10 +152,13 @@ export const categories = [
     value: "Software Engineer",
   },
   {
+    value: "Robotics",
+  },
+  {
     value: "Global Warming",
   },
   {
-    value: "Gaming Industry ",
+    value: "Gaming Industry",
   },
   {
     value: "Palestine vs Israel",

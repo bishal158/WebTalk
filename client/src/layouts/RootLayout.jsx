@@ -15,8 +15,7 @@ export const RootLayout = ({ children }) => {
   return (
     <div>
       <SideBar />
-
-      <main className={"h-screen w-full flex flex-col"}>
+      <main className={"h-screen w-full flex flex-col mb-3"}>
         <nav
           className={
             "w-full h-15 flex justify-end items-center px-2 bg-slate-100 border-b-2 sticky mb-8"

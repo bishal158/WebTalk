@@ -3,23 +3,16 @@ const router = express.Router();
 const {
   login,
   register,
-  savePost,
-  getAllPosts,
-  getFilteredPosts,
-  getSinglePost,
+  logout,
+  userTotal,
 } = require("../controllers/userController");
-
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 router.post("/register", upload.single("avatar"), register);
 router.post("/login", login);
-router.post("/savePost", upload.single("cover"), savePost);
-router.get("/getAllPost", getAllPosts);
-router.get("/getFilteredPosts", getFilteredPosts);
-router.get("/getSinglePost/:id", getSinglePost);
+router.post("/logout", logout);
+router.get("/userTotal", userTotal);
 module.exports = router;
-
-
 // // get the profile
 // router.get("/profile", (request, response) => {
 //   const { token } = request.cookies;

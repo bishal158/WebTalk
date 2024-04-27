@@ -1,38 +1,87 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSinglePost } from "../redux/postSlice.js";
+import {
+  deleteSinglePost,
+  getSinglePost,
+  likedPost,
+} from "../redux/postSlice.js";
 import { base_url } from "../constants/constants.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment-timezone";
+import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
+import Modal from "react-bootstrap/Modal";
 
 export const Post = () => {
+  const navigation = useNavigate();
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
   const dispatch = useDispatch();
   const { posts, isLoading, error, success, postInfo } = useSelector(
     (state) => state.post,
   );
   const { userInfo } = useSelector((state) => state.auth);
   const { id } = useParams();
-  const [like, setLike] = useState(false);
+  const [liked, setLiked] = useState(false);
   useEffect(() => {
     dispatch(getSinglePost(id));
   }, [dispatch]);
+  const deletePost = () => {
+    dispatch(deleteSinglePost(id));
+  };
   const likeIt = () => {
     console.log("liked");
-    setLike(true);
+    dispatch(likedPost(id));
+    setLiked(true);
   };
   const dislikeIt = () => {
-    setLike(false);
+    setLiked(false);
+    console.log("dislike");
   };
-  if (!postInfo) return "";
+  if (!postInfo) return null;
+
   return (
     <div>
       <section
         className={"w-full h-full flex flex-wrap justify-start px-3 py-4 "}
       >
+        <Modal
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Delete this post</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete this post????</Modal.Body>
+          <Modal.Footer
+            className={
+              "w-full h-fit flex justify-between items-center text-white font-bold"
+            }
+          >
+            <button
+              className={
+                "bg-red-600 w-[60px] h-[40px] flex justify-center items-center rounded-[5px]"
+              }
+              onClick={deletePost}
+            >
+              Yes
+            </button>
+            <button
+              className={
+                "bg-blue-600 w-[60px] h-[40px] flex justify-center items-center rounded-[5px]"
+              }
+              onClick={handleClose}
+            >
+              No
+            </button>
+          </Modal.Footer>
+        </Modal>
+        {isLoading ? <LoadingSpinner /> : null}
         <div
           className={
-            "md:w-4/5 flex flex-col w-full h-fit bg-[#EDF0F2]  rounded dark:bg-black shadow-sky-50 shadow-xl dark:text-white"
+            "md:w-3/4 flex flex-col w-full h-fit bg-[#EDF0F2]  rounded-[10px] dark:bg-black shadow-sky-50 shadow-xl dark:text-white "
           }
         >
           <div className={"w-full h-full  flex justify-center items-center"}>
@@ -80,23 +129,27 @@ export const Post = () => {
                     "flex text-[14px] px-1 md:text-[16px] cursor-pointer"
                   }
                 >
-                  <FontAwesomeIcon
-                    icon="fa-solid fa-trash"
-                    className={"mx-2.5 text-red-800"}
-                  />
-                  <FontAwesomeIcon
-                    icon="fa-solid fa-pen-to-square"
-                    className={"text-blue-500"}
-                  />
+                  <Link
+                    to={`/post/edit/${postInfo._id}`}
+                    className={
+                      "w-10 h-10 rounded-full items-center justify-center font-bold text-center text-blue-500"
+                    }
+                  >
+                    <FontAwesomeIcon icon="fa-solid fa-pen-to-square" />
+                  </Link>
+                  <a
+                    className={
+                      "w-10 h-10 rounded-full items-center justify-center font-bold text-center text-red-500"
+                    }
+                    onClick={() => setShow(!show)}
+                  >
+                    <FontAwesomeIcon icon="fa-solid fa-trash" />
+                  </a>
                 </div>
               ) : null}
             </div>
           </div>
-          <h1
-            className={
-              "w-full h-full text-center font-bold text-2xl mt-4  border-b-blue-950 border-b-2"
-            }
-          >
+          <h1 className={"w-full h-full text-center font-bold text-2xl mt-4  "}>
             Post Details
           </h1>
           <div
@@ -110,11 +163,11 @@ export const Post = () => {
           >
             <p className={"text-gray-950 md:text-2xl"}>Do you like it ?</p>
             <span>
-              {like ? (
+              {liked ? (
                 <FontAwesomeIcon
                   icon="fa-solid fa-thumbs-down"
                   onClick={dislikeIt}
-                  className={`${like ? "text-red-600" : "text-blue-500"}`}
+                  className={`${liked ? "text-red-600" : "text-blue-500"}`}
                   size={"xl"}
                 />
               ) : (
@@ -122,13 +175,15 @@ export const Post = () => {
                   icon="fa-solid fa-thumbs-up"
                   onClick={likeIt}
                   size={"xl"}
-                  className={`${like ? "text-red-600" : "text-blue-500"}`}
+                  className={`${liked ? "text-red-600" : "text-blue-500"}`}
                 />
               )}
             </span>
           </div>
         </div>
-        <div>Popular Details</div>
+        <div className={"md:w-1/4 h-fit w-full flex flex-col "}>
+          Popular Details
+        </div>
       </section>
     </div>
   );

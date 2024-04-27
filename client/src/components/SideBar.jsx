@@ -2,16 +2,21 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import avatar from "../assets/images/dummy-image.jpg";
 import Logo from "../assets/favicon/favicon-32x32.png";
-import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { NavLink, redirect, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { generalRoutes, userRoutes } from "../constants/constants.js";
+import { logoutUser } from "../redux/authSlice.js";
+import { Cookies } from "react-cookie";
 
 export const SideBar = () => {
   // const [userInfo, setUserInfo] = useState([]);
+  const navigation = useNavigate();
+  const cookies = new Cookies();
   const { isLoading, error, success, userInfo } = useSelector(
     (state) => state.auth,
   );
+  const dispatch = useDispatch();
   // useEffect(() => {
   //   let user = localStorage.getItem("userInfo");
   //   setUserInfo(JSON.parse(user));
@@ -24,7 +29,11 @@ export const SideBar = () => {
   const close = () => {
     document.getElementById("sidebar").classList.toggle("close");
   };
-  const logout = () => {};
+  const logout = () => {
+    dispatch(logoutUser());
+    cookies.remove("token");
+    navigation("/login");
+  };
   return (
     <aside
       id={"sidebar"}
@@ -50,16 +59,17 @@ export const SideBar = () => {
       {userInfo ? (
         <div
           className={
-            "flex  items-center gap-2.5 font-medium py-3 mx-3 overflow-hidden"
+            "w-full flex  items-center font-medium py-3 mx-3 overflow-hidden"
           }
         >
           <img
             src={userInfo.avatar}
             alt={"..."}
-            width={40}
-            className={"rounded-full"}
+            className={
+              "rounded-full w-[50px] h-[50px] overflow-hidden border-emerald-700 border-2"
+            }
           />
-          <span className={"text-xl whitespace-pre"}>{userInfo.name}</span>
+          <span className={"text-[20px] whitespace-pre"}>{userInfo.name}</span>
         </div>
       ) : (
         <div

@@ -4,7 +4,6 @@ import { editorInit } from "../constants/constants.js";
 import writing_img from "../assets/images/Write.gif";
 import { categories, editorInputs } from "../constants/inputs.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { registerUser } from "../redux/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { savePost } from "../redux/postSlice.js";
 import { useNavigate } from "react-router-dom";
@@ -40,8 +39,6 @@ export const WriteBlogs = () => {
   const blog_post = async (e) => {
     e.preventDefault();
     const blogData = new FormData();
-    // console.log(blog);
-    // console.log(inputs.avatar);
     blogData.append("title", blog.title);
     blogData.append("cover", blog.cover);
     blogData.append("summary", blog.summary);
@@ -49,12 +46,14 @@ export const WriteBlogs = () => {
     blogData.append("content", editorRef.current.getContent());
     try {
       await dispatch(savePost(blogData));
+      if (success) {
+        navigator("/read-blogs");
+      }
     } catch (err) {
       console.log(err);
     }
     // console.log(blogData.get("content"));
   };
-
   return (
     <div>
       <section
@@ -135,7 +134,7 @@ export const WriteBlogs = () => {
                 "w-full md:w-[16rem] p-2 mb-5 bg-indigo-50 text-white rounded mt-2 valid:bg-indigo-950"
               }
             >
-              Post
+              {isLoading ? "Posting..." : "Post"}
             </button>
           </form>
         </div>

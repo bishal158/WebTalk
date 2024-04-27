@@ -1,7 +1,7 @@
 import register_img from "../assets/images/Sign up.gif";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux/authSlice.js";
 import { registerInputs } from "../constants/inputs.js";
@@ -9,7 +9,9 @@ import { registerInputs } from "../constants/inputs.js";
 export const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, error, success } = useSelector((state) => state.auth);
+  const { isLoading, error, success, userInfo } = useSelector(
+    (state) => state.auth,
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [inputs, setInputs] = useState({
@@ -19,6 +21,13 @@ export const Register = () => {
     password: "",
     confirmPassword: "",
   });
+  useEffect(() => {
+    if (success) {
+      navigate("/login");
+    } else {
+      navigate("/register");
+    }
+  }, [success]);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleClickShowConfirmPassword = () =>
     setShowConfirmPassword(!showConfirmPassword);

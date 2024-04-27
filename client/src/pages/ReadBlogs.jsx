@@ -4,7 +4,6 @@ import { getAllPosts, getFilteredPosts } from "../redux/postSlice.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { categories } from "../constants/inputs.js";
 import { base_url } from "../constants/constants.js";
-import { format } from "date-fns";
 import moment from "moment-timezone";
 import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
 import { Link } from "react-router-dom";
@@ -52,7 +51,7 @@ export const ReadBlogs = () => {
               return (
                 <li
                   key={index}
-                  className={`max-w-full h-[40px] flex justify-start items-center  px-3 font-medium text-[#ffffff] border-white m-0.5 cursor-pointer bg-[#1f1f1a]  rounded`}
+                  className={`max-w-full h-[40px] flex justify-start items-center  px-3 font-medium text-[#ffffff] border-white m-0.5 cursor-pointer bg-[#1f1f1a]  rounded-[15px] mb-3`}
                   id={"category"}
                   onClick={() => filterPost(category.value)}
                 >
@@ -153,7 +152,7 @@ export const ReadBlogs = () => {
                               size={"lg"}
                               className={"mx-1"}
                             />
-                            {post.likes}
+                            {post.likes.length}
                           </span>
                         </div>
                         <div

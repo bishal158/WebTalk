@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { base_url } from "../constants/constants.js";
+import { Cookies } from "react-cookie";
 
 const getUser = () => {
   let user = localStorage.getItem("userInfo");
@@ -32,6 +33,17 @@ export const loginUser = createAsyncThunk(
       return response.data; // Handle success response
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
+    }
+  },
+);
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (arg, thunkAPI) => {
+    try {
+      const response = await axios.post(base_url + "/user/logout");
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data);
     }
   },
 );
@@ -83,6 +95,13 @@ const authSlice = createSlice({
         state.success = false;
         state.userInfo = null;
         localStorage.setItem("userInfo", state.userInfo);
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.userInfo = null;
+        state.isLoading = false;
+        state.error = null;
+        state.success = action.payload;
+        localStorage.removeItem("userInfo");
       });
   },
 });

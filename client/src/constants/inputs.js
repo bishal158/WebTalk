@@ -149,7 +149,7 @@ export const categories = [
     value: "Fiction",
   },
   {
-    value: "Software Engineer",
+    value: "Software Engineering",
   },
   {
     value: "Robotics",

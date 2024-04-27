@@ -6,7 +6,7 @@ export const savePost = createAsyncThunk(
   "posts/savePost",
   async (postData, thunkAPI) => {
     try {
-      const post = await axios.post(base_url + "/user/savePost", postData, {
+      const post = await axios.post(base_url + "/post/savePost", postData, {
         withCredentials: true,
       });
       return post.data;
@@ -19,7 +19,7 @@ export const getAllPosts = createAsyncThunk(
   "post/getAllPosts",
   async (arg, thunkAPI) => {
     try {
-      const posts = await axios.get(base_url + "/user/getAllPost");
+      const posts = await axios.get(base_url + "/post/getAllPost");
       return posts.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -31,7 +31,7 @@ export const getFilteredPosts = createAsyncThunk(
   async (category, thunkAPI) => {
     try {
       const posts = await axios.get(
-        base_url + `/user/getFilteredPosts/?category=${category}`,
+        base_url + `/post/getFilteredPosts/?category=${category}`,
       );
       return posts.data;
     } catch (err) {
@@ -42,16 +42,50 @@ export const getFilteredPosts = createAsyncThunk(
 export const getSinglePost = createAsyncThunk(
   "post/getSinglePost",
   async (id, thunkAPI) => {
-    console.log(id);
+    // console.log(id);
     try {
-      const postInfo = await axios.get(base_url + `/user/getSinglePost/${id}`);
+      const postInfo = await axios.get(base_url + `/post/getSinglePost/${id}`);
       return postInfo.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
     }
   },
 );
-
+export const deleteSinglePost = createAsyncThunk(
+  "post/deletePost",
+  async (id, thunkAPI) => {
+    console.log(id);
+    try {
+      const deletePost = await axios.delete(
+        base_url + `/post/deletePost/${id}`,
+        {
+          withCredentials: true,
+        },
+      );
+      return deletePost.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
+export const likedPost = createAsyncThunk(
+  "post/liked",
+  async (id, thunkAPI) => {
+    // console.log(id);
+    try {
+      const likedPost = await axios.put(
+        base_url + `/post/likedPost/${id}`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+      return likedPost.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  },
+);
 const postSlice = createSlice({
   name: "post",
   initialState: {
@@ -60,6 +94,7 @@ const postSlice = createSlice({
     success: false,
     postInfo: null,
     posts: [],
+    liked: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -80,7 +115,7 @@ const postSlice = createSlice({
       .addCase(savePost.rejected, (state, action) => {
         state.error = action.payload;
         state.success = false;
-        state.error = null;
+        state.isLoading = false;
         state.posts = [];
       })
       /** fetch all posts **/
@@ -121,6 +156,7 @@ const postSlice = createSlice({
         state.posts = [...state.posts];
         state.error = action.payload;
       })
+      /** get Single Post Info **/
       .addCase(getSinglePost.pending, (state, action) => {
         state.posts = [...state.posts];
         state.success = false;
@@ -141,6 +177,42 @@ const postSlice = createSlice({
         state.posts = [...state.posts];
         state.error = action.payload;
         state.postInfo = null;
+      })
+      /** delete this post **/
+      .addCase(deleteSinglePost.pending, (state, action) => {
+        state.isLoading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(deleteSinglePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+        state.postInfo = null;
+      })
+      .addCase(deleteSinglePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.success = false;
+        state.error = action.payload;
+      })
+      /** like this post **/
+      .addCase(likedPost.pending, (state, action) => {
+        state.isLoading = true;
+        state.success = false;
+        state.error = null;
+        state.liked = false;
+      })
+      .addCase(likedPost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+        state.error = null;
+        state.liked = true;
+        state.postInfo = action.payload;
+      })
+      .addCase(likedPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.success = false;
+        state.error = action.payload;
+        state.liked = false;
       });
   },
 });

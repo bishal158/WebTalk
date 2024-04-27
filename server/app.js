@@ -12,11 +12,11 @@ const PORT = process.env.PORT;
 const DATABASE_URL = process.env.MONGODB_CONNECTION;
 // database connection
 const connectDb = async () => {
-    try {
-        await mongoose.connect(DATABASE_URL);
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-    }
+  try {
+    await mongoose.connect(DATABASE_URL);
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+  }
 };
 connectDb().then((r) => console.log("Connected to Database"));
 app.use(cookieParser());
@@ -26,7 +26,9 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use("/uploads", express.static(__dirname + "/uploads"));
 // routes
 const userRouter = require("./routes/userRoutes");
+const postRouter = require("./routes/postRoutes");
 app.use("/user", userRouter);
+app.use("/post", postRouter);
 app.listen(PORT);
 
 

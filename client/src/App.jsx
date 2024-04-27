@@ -12,7 +12,7 @@ import { RootLayout } from "./layouts/RootLayout.jsx";
 import { WriteBlogs } from "./pages/WriteBlogs.jsx";
 import { ReadBlogs } from "./pages/ReadBlogs.jsx";
 import { Protected } from "./utils/Protected.jsx";
-import { EditBlog } from "./pages/EditBlog.jsx";
+import { EditPost } from "./pages/EditPost.jsx";
 import { Post } from "./pages/Post.jsx";
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
           />
           <Route
             path="/post/edit/:id"
-            element={<Protected Component={EditBlog} />}
+            element={<Protected Component={EditPost} />}
           />
         </Routes>
       </RootLayout>

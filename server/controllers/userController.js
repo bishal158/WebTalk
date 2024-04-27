@@ -81,82 +81,20 @@ const login = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-const savePost = async (req, res, next) => {
-  console.log(req.file);
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const extension = parts[parts.length - 1];
-  const newPath = path + "." + extension;
-  filesystem.renameSync(path, newPath);
-  const { token } = req.cookies;
-  jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
-    if (error) throw error;
-    const { title, summary, content, category } = req.body;
-    try {
-      const post = await Post.create({
-        title,
-        summary,
-        category,
-        content,
-        cover: newPath,
-        author: info._id,
-      });
-      res.status(201).json(post);
-    } catch (e) {
-      res.status(500).json({ message: "Server error" });
-    }
-  });
+const logout = async (req, res) => {
+  res.cookie("token", "").json({ message: "Logout Successful" });
 };
-const getAllPosts = async (req, res, next) => {
+
+const userTotal = async (req, res) => {
   try {
-    const posts = await Post.find().populate("author").sort({ createdAt: -1 });
-    res.status(201).json(posts);
+    const totalUser = await User.countDocuments({}); // Count all documents
+    res.status(200).json({ count: totalUser });
+    console.log(totalUser);
   } catch (e) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
-const getFilteredPosts = async (req, res, next) => {
-  const { category } = req.query;
-  const filter = {};
-  if (category) {
-    filter.category = category;
-    console.log(filter);
-  }
-  try {
-    if (category === "All") {
-      const posts = await Post.find()
-        .populate("author")
-        .sort({ createdAt: -1 });
-      res.status(200).json(posts);
-    } else {
-      const filteredPosts = await Post.find(filter)
-        .populate("author")
-        .sort({ createdAt: -1 });
-      res.status(200).json(filteredPosts);
-      console.log(filteredPosts);
-    }
-  } catch (e) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
-const getSinglePost = async (req, res, next) => {
-  const { id } = req.params;
-  console.log(id);
-  try {
-    const postInfo = await Post.findById(id).populate("author");
-    console.log(postInfo);
-    if (postInfo) {
-      res.status(200).json(postInfo);
-    } else {
-      res.status(404).json({ message: "Opps!!!Post not available" });
-    }
-  } catch (e) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 exports.register = register;
 exports.login = login;
-exports.savePost = savePost;
-exports.getAllPosts = getAllPosts;
-exports.getFilteredPosts = getFilteredPosts;
-exports.getSinglePost = getSinglePost;
+exports.logout = logout;
+exports.userTotal = userTotal;

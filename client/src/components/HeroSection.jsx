@@ -7,7 +7,7 @@ export const HeroSection = () => {
     <div>
       <section
         className={
-          "w-full h-full flex justify-around items-center flex-wrap px-2 mb-3 "
+          "w-full max-h-fit flex justify-around items-center flex-wrap px-2 mb-3 "
         }
       >
         <div className={"flex flex-col justify-center items-center "}>
@@ -32,7 +32,7 @@ export const HeroSection = () => {
                 target={"_blank"}
                 rel={"noopener noreferrer"}
                 className={
-                  "w-25 h-25 flex justify-center items-center bg-black rounded-full hover:animate-bounce"
+                  "w-30 h-30 flex justify-center items-center bg-black rounded-full hover:animate-bounce p-2.5 gap-6 m-2  cursor-pointer  font-medium"
                 }
               >
                 <FontAwesomeIcon

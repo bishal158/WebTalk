@@ -96,7 +96,10 @@ export const Register = () => {
                 return (
                   <div className={field.div_class} key={index}>
                     <span className={field.span_class}>
-                      <FontAwesomeIcon icon={field.icon_1} />
+                      <FontAwesomeIcon
+                        icon={field.icon_1}
+                        className={"animate-bounce"}
+                      />
                     </span>
                     <input
                       className={field.input_class}

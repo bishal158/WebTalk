@@ -49,7 +49,7 @@ export const SideBar = () => {
         onClick={close}
       >
         <FontAwesomeIcon
-          icon={"fa-solid fa-xmark"}
+          icon="fa-solid fa-arrow-left"
           className={
             "bg-amber-50 text-black flex w-[20px] h-[20px] items-center justify-center p-1 rounded-full"
           }

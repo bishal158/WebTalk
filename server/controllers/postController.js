@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
 const filesystem = require("fs");
 
+// save a single post
 const savePost = async (req, res, next) => {
   console.log(req.file);
   if (!req.file) {
@@ -35,6 +36,8 @@ const savePost = async (req, res, next) => {
     });
   }
 };
+
+// get all the posts
 const getAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.find().populate("author").sort({ createdAt: -1 });
@@ -65,6 +68,8 @@ const getFilteredPosts = async (req, res, next) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// get a single post
 const getSinglePost = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -79,12 +84,8 @@ const getSinglePost = async (req, res, next) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-const likePost = async (req, res, next) => {
-  const { id } = req.params;
-  console.log(id);
-};
-const disLikePost = async (req, res, next) => {};
 
+// delete a post
 const deletePost = async (req, res, next) => {
   const { id } = req.params;
   const { token } = req.cookies;
@@ -92,9 +93,9 @@ const deletePost = async (req, res, next) => {
     try {
       const post = await Post.findById(id);
       console.log(post.author);
-      console.log(info);
+      // console.log(info);
       if (!post || post.author.toString() !== info._id) {
-        res.status(401).json({ message: "Unauthorized" });
+        res.status(401).json({ message: "Unauthorized to delete" });
       }
       await Post.findByIdAndDelete(id);
       res.status(200).json({ message: "Post deleted successfully" });
@@ -103,10 +104,50 @@ const deletePost = async (req, res, next) => {
     }
   });
 };
+// update a post
+const updatePost = (req, res) => {
+  const { title, summary, cover, content, category, id } = req.body;
+  const { token } = req.cookies;
+  let newPath = null;
+  if (req.file) {
+    const { originalname, path } = req.file;
+    const parts = originalname.split(".");
+    const extension = parts[parts.length - 1];
+    newPath = path + "." + extension;
+    console.log(newPath);
+    filesystem.renameSync(path, newPath);
+  }
+  jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
+    if (error) throw error;
+    try {
+      const post = await Post.findById(id);
+      if (!post || post.author.toString() !== info._id) {
+        res.status(401).json({ message: "Unauthorized to update" });
+      } else {
+        const updatedPost = await Post.findByIdAndUpdate(id, {
+          title,
+          summary,
+          category,
+          content,
+          cover: newPath ? newPath : post.cover,
+        });
+        res.status(200).json(updatedPost);
+      }
+    } catch (e) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+};
+const likePost = async (req, res, next) => {
+  const { id } = req.params;
+};
+const disLikePost = async (req, res, next) => {};
+
 exports.savePost = savePost;
 exports.getAllPosts = getAllPosts;
 exports.getFilteredPosts = getFilteredPosts;
 exports.getSinglePost = getSinglePost;
+exports.deletePost = deletePost;
+exports.updatePost = updatePost;
 exports.likePost = likePost;
 exports.disLikePost = disLikePost;
-exports.deletePost = deletePost;

@@ -10,14 +10,15 @@ import { base_url } from "../constants/constants.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment-timezone";
 import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
-import Modal from "react-bootstrap/Modal";
+import { DeleteModal } from "../utils/DeleteModal.jsx";
+import { NotAvailableModal } from "../utils/NotAvailableModal.jsx";
 
 export const Post = () => {
   const navigation = useNavigate();
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => setShow(!show);
   const dispatch = useDispatch();
-  const { posts, isLoading, error, success, postInfo } = useSelector(
+  const { posts, isLoading, error, success, postInfo, deleted } = useSelector(
     (state) => state.post,
   );
   const { userInfo } = useSelector((state) => state.auth);
@@ -26,9 +27,14 @@ export const Post = () => {
   useEffect(() => {
     dispatch(getSinglePost(id));
   }, [dispatch]);
-  const deletePost = () => {
+  const deletePost = async () => {
     dispatch(deleteSinglePost(id));
   };
+  // useEffect(() => {
+  //   if (deleted) {
+  //     navigation("/read-blogs");
+  //   }
+  // }, [deleted]);
   const likeIt = () => {
     console.log("liked");
     dispatch(likedPost(id));
@@ -38,46 +44,32 @@ export const Post = () => {
     setLiked(false);
     console.log("dislike");
   };
-  if (!postInfo) return null;
-
+  if (!postInfo) {
+    if (isLoading) {
+      return <LoadingSpinner />;
+    }
+    return (
+      <NotAvailableModal
+        message={"Post Not Available"}
+        link={"/read-blogs"}
+      ></NotAvailableModal>
+    );
+  }
   return (
     <div>
       <section
         className={"w-full h-full flex flex-wrap justify-start px-3 py-4 "}
       >
-        <Modal
-          show={show}
-          onHide={handleClose}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Delete this post</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Are you sure you want to delete this post????</Modal.Body>
-          <Modal.Footer
-            className={
-              "w-full h-fit flex justify-between items-center text-white font-bold"
-            }
-          >
-            <button
-              className={
-                "bg-red-600 w-[60px] h-[40px] flex justify-center items-center rounded-[5px]"
-              }
-              onClick={deletePost}
-            >
-              Yes
-            </button>
-            <button
-              className={
-                "bg-blue-600 w-[60px] h-[40px] flex justify-center items-center rounded-[5px]"
-              }
-              onClick={handleClose}
-            >
-              No
-            </button>
-          </Modal.Footer>
-        </Modal>
+        {show && (
+          <DeleteModal onDelete={deletePost} onClose={handleClose}>
+            <h1 className={"text-[18px] mb-2 text-center font-bold"}>
+              Delete Post
+            </h1>
+            <p className={"text-[15px]  text-center font-medium mb-4"}>
+              This will permanently delete this post
+            </p>
+          </DeleteModal>
+        )}
         {isLoading ? <LoadingSpinner /> : null}
         <div
           className={
@@ -87,7 +79,7 @@ export const Post = () => {
           <div className={"w-full h-full  flex justify-center items-center"}>
             <img
               src={base_url + "/" + postInfo.cover}
-              className={"md:w-full md:h-96 h-60 rounded"}
+              className={"md:w-full md:h-96 h-60 w-full rounded"}
               alt={"ssss"}
             />
           </div>
@@ -126,24 +118,34 @@ export const Post = () => {
               {postInfo.author._id === userInfo._id ? (
                 <div
                   className={
-                    "flex text-[14px] px-1 md:text-[16px] cursor-pointer"
+                    "flex  text-[14px] px-1 md:text-[16px] cursor-pointer"
                   }
                 >
                   <Link
                     to={`/post/edit/${postInfo._id}`}
                     className={
-                      "w-10 h-10 rounded-full items-center justify-center font-bold text-center text-blue-500"
+                      "w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-center bg-blue-300 mx-2"
                     }
                   >
-                    <FontAwesomeIcon icon="fa-solid fa-pen-to-square" />
+                    <FontAwesomeIcon
+                      icon="fa-solid fa-pen-to-square"
+                      className={
+                        "text-blue-800 hover:shadow-black hover:shadow-2xl"
+                      }
+                    />
                   </Link>
                   <a
                     className={
-                      "w-10 h-10 rounded-full items-center justify-center font-bold text-center text-red-500"
+                      "w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-center bg-red-300"
                     }
                     onClick={() => setShow(!show)}
                   >
-                    <FontAwesomeIcon icon="fa-solid fa-trash" />
+                    <FontAwesomeIcon
+                      icon="fa-solid fa-trash"
+                      className={
+                        "text-red-800 hover:shadow-black hover:shadow-2xl"
+                      }
+                    />
                   </a>
                 </div>
               ) : null}
@@ -153,7 +155,7 @@ export const Post = () => {
             Post Details
           </h1>
           <div
-            className={"w-full h-full p-2 mb-3 mt-2 bg-[#fff] "}
+            className={"w-full h-full p-2 mb-3 mt-2 bg-[#fff] overflow-hidden "}
             dangerouslySetInnerHTML={{ __html: postInfo.content }}
           ></div>
           <div
@@ -167,15 +169,23 @@ export const Post = () => {
                 <FontAwesomeIcon
                   icon="fa-solid fa-thumbs-down"
                   onClick={dislikeIt}
-                  className={`${liked ? "text-red-600" : "text-blue-500"}`}
-                  size={"xl"}
+                  className={`${
+                    liked
+                      ? "text-red-600 hover:animate-bounce"
+                      : "text-blue-500 hover:animate-bounce"
+                  }`}
+                  size={"lg"}
                 />
               ) : (
                 <FontAwesomeIcon
                   icon="fa-solid fa-thumbs-up"
                   onClick={likeIt}
-                  size={"xl"}
-                  className={`${liked ? "text-red-600" : "text-blue-500"}`}
+                  size={"lg"}
+                  className={`${
+                    liked
+                      ? "text-red-600 hover:animate-bounce"
+                      : "text-blue-500 hover:animate-bounce"
+                  }`}
                 />
               )}
             </span>

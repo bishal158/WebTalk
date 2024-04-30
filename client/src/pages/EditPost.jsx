@@ -1,26 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRef, useState } from "react";
-import { savePost } from "../redux/postSlice.js";
+import { updatePost } from "../redux/postSlice.js";
 import { categories, editorInputs } from "../constants/inputs.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Editor } from "@tinymce/tinymce-react";
 import { editorInit } from "../constants/constants.js";
 import writing_img from "../assets/images/Write.gif";
+import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
 
 export const EditPost = () => {
   const dispatch = useDispatch();
   const navigator = useNavigate();
   const { id } = useParams();
-  const { isLoading, error, success, posts } = useSelector(
+  const { isLoading, error, success, posts, postInfo } = useSelector(
     (state) => state.post,
   );
   const editorRef = useRef(null);
   const [blog, setBlog] = useState({
-    title: "",
+    title: postInfo.title,
     cover: null,
-    summary: "",
-    category: "",
+    summary: postInfo.summary,
+    category: postInfo.category,
   });
   const handleChange = (e) => {
     setBlog((prevState) => ({
@@ -40,19 +41,20 @@ export const EditPost = () => {
   const update_post = async (e) => {
     e.preventDefault();
     const blogData = new FormData();
-    // console.log(blog);
-    // console.log(inputs.avatar);
     blogData.append("title", blog.title);
-    blogData.append("cover", blog.cover);
     blogData.append("summary", blog.summary);
     blogData.append("category", blog.category);
+    blogData.append("id", id);
     blogData.append("content", editorRef.current.getContent());
+    blogData.append("cover", blog.cover);
     try {
-      await dispatch(savePost(blogData));
+      await dispatch(updatePost(blogData));
+      if (success) {
+        navigator(`/post/${id}`);
+      }
     } catch (err) {
       console.log(err);
     }
-    // console.log(blogData.get("content"));
   };
 
   return (
@@ -62,6 +64,7 @@ export const EditPost = () => {
           "w-full h-full flex flex-wrap justify-start items-center px-2 py-4 md:px-1.5 "
         }
       >
+        {isLoading ? <LoadingSpinner /> : null}
         <div
           className={
             "w-full h-full flex flex-col justify-center items-center overflow-hidden md:w-3/4 md:h-full"
@@ -86,8 +89,52 @@ export const EditPost = () => {
                 type={"text"}
                 name={"title"}
                 id={"title"}
+                value={blog.title}
                 placeholder={"Give a title"}
-                maxLength={60}
+                maxLength={80}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={"w-full mb-5 flex"}>
+              <span
+                className={
+                  "bg-slate-200 flex justify-center items-center w-10 h-10 border border-gray-300"
+                }
+              >
+                <FontAwesomeIcon icon="fa-solid fa-user" size={"lg"} />
+              </span>
+              <input
+                className={
+                  "w-full h-10 flex justify-start items-center px-1 py-1 bg-gray-50 border border-gray-300 text-black-900 placeholder:font-bold"
+                }
+                type={"file"}
+                name={"cover"}
+                id={"cover"}
+                placeholder={"Give a cover"}
+                onChange={handleProfilePictureChange}
+              />
+            </div>
+            <div className={"w-full mb-5 flex"}>
+              <span
+                className={
+                  "bg-slate-200 flex justify-center items-center w-10 h-10 border border-gray-300"
+                }
+              >
+                <FontAwesomeIcon
+                  icon="fa-solid fa-clipboard-list"
+                  size={"lg"}
+                />
+              </span>
+              <input
+                className={
+                  "w-full h-10 flex justify-start items-center px-1 py-1 bg-gray-50 border border-gray-300 text-black-900 placeholder:font-bold"
+                }
+                type={"text"}
+                name={"summary"}
+                id={"summary"}
+                placeholder={"Give a summary"}
+                maxLength={250}
+                value={blog.summary}
                 onChange={handleChange}
               />
             </div>
@@ -95,7 +142,7 @@ export const EditPost = () => {
               <Editor
                 apiKey="g5t0lb044xbvf9kxol6dy9sv9297lj3ixsrzbn6ckyxkyhzz"
                 onInit={(_evt, editor) => (editorRef.current = editor)}
-                initialValue="<p>This is the initial content of the editor.</p>"
+                initialValue={postInfo.content}
                 name={"content"}
                 id={"content"}
                 init={editorInit}
@@ -112,6 +159,7 @@ export const EditPost = () => {
               <select
                 name="category"
                 id={"category"}
+                value={blog.category}
                 placeholder={"Select a category"}
                 onChange={handleChange}
                 className={

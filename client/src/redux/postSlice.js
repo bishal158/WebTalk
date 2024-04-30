@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { base_url } from "../constants/constants.js";
 
+//saving a post
 export const savePost = createAsyncThunk(
   "posts/savePost",
   async (postData, thunkAPI) => {
@@ -15,6 +16,8 @@ export const savePost = createAsyncThunk(
     }
   },
 );
+
+// getting all posts
 export const getAllPosts = createAsyncThunk(
   "post/getAllPosts",
   async (arg, thunkAPI) => {
@@ -26,6 +29,8 @@ export const getAllPosts = createAsyncThunk(
     }
   },
 );
+
+// get all posts
 export const getFilteredPosts = createAsyncThunk(
   "post/getFilteredPosts",
   async (category, thunkAPI) => {
@@ -39,6 +44,8 @@ export const getFilteredPosts = createAsyncThunk(
     }
   },
 );
+
+// get single post
 export const getSinglePost = createAsyncThunk(
   "post/getSinglePost",
   async (id, thunkAPI) => {
@@ -51,6 +58,8 @@ export const getSinglePost = createAsyncThunk(
     }
   },
 );
+
+// delete a single post
 export const deleteSinglePost = createAsyncThunk(
   "post/deletePost",
   async (id, thunkAPI) => {
@@ -68,6 +77,27 @@ export const deleteSinglePost = createAsyncThunk(
     }
   },
 );
+
+// update a post
+export const updatePost = createAsyncThunk(
+  "post/updatePost",
+  async (updatedData, thunkAPI) => {
+    try {
+      const updatedPost = await axios.put(
+        base_url + `/post/updatePost/${updatedData.get("id")}`,
+        updatedData,
+        {
+          withCredentials: true,
+        },
+      );
+      return updatedPost.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
+
+// like a post
 export const likedPost = createAsyncThunk(
   "post/liked",
   async (id, thunkAPI) => {
@@ -86,6 +116,9 @@ export const likedPost = createAsyncThunk(
     }
   },
 );
+// dislike a post
+
+// post slice
 const postSlice = createSlice({
   name: "post",
   initialState: {
@@ -95,6 +128,7 @@ const postSlice = createSlice({
     postInfo: null,
     posts: [],
     liked: false,
+    deleted: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -181,15 +215,28 @@ const postSlice = createSlice({
       /** delete this post **/
       .addCase(deleteSinglePost.pending, (state, action) => {
         state.isLoading = true;
-        state.success = false;
         state.error = null;
       })
       .addCase(deleteSinglePost.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.success = true;
+        state.deleted = true;
         state.postInfo = null;
       })
       .addCase(deleteSinglePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      /** update a post **/
+      .addCase(updatePost.pending, (state, action) => {
+        state.isLoading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+      })
+      .addCase(updatePost.rejected, (state, action) => {
         state.isLoading = false;
         state.success = false;
         state.error = action.payload;

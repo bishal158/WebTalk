@@ -13,22 +13,8 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.get("/userTotal", userTotal);
 module.exports = router;
-// // get the profile
-// router.get("/profile", (request, response) => {
-//   const { token } = request.cookies;
-//   jwt.verify(token, SECRET_KEY, {}, (error, info) => {
-//     if (error) throw error;
-//     response.json(info);
-//   });
-//   response.json(token);
-// });
-//
-// // logout
-// router.post("/logout", (request, response) => {
-//   response.cookie("token", "").json("ok");
-// });
-//
-// // post
+
+// post
 //
 // router.post("/post", upload.single("images"), async (request, response) => {
 //   const { originalname, path } = request.file;
@@ -69,7 +55,7 @@ module.exports = router;
 //   response.json(postInfo);
 // });
 //
-// // edit post
+// edit post
 // router.put("/post", upload.single("images"), async (request, response) => {
 //   let newPath = null;
 //   if (request.file) {

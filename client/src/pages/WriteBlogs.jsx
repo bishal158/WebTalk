@@ -7,8 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { savePost } from "../redux/postSlice.js";
 import { useNavigate } from "react-router-dom";
+import { Toast } from "../utils/Toast.jsx";
+import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
 
 export const WriteBlogs = () => {
+  const [showToast, setShowToast] = useState(true);
+  const handleToast = () => {
+    setShowToast(false);
+  };
   const dispatch = useDispatch();
   const navigator = useNavigate();
   const { isLoading, error, success, posts } = useSelector(
@@ -36,6 +42,7 @@ export const WriteBlogs = () => {
       }));
     }
   };
+
   const blog_post = async (e) => {
     e.preventDefault();
     const blogData = new FormData();
@@ -49,10 +56,7 @@ export const WriteBlogs = () => {
       if (success) {
         navigator("/read-blogs");
       }
-    } catch (err) {
-      console.log(err);
-    }
-    // console.log(blogData.get("content"));
+    } catch (err) {}
   };
   return (
     <div>
@@ -61,6 +65,14 @@ export const WriteBlogs = () => {
           "w-full h-full flex flex-wrap justify-start items-center px-2 py-4 md:px-1.5 "
         }
       >
+        {/* if success*/}
+        {/*{showToast && (*/}
+        {/*  <Toast*/}
+        {/*    type="success"*/}
+        {/*    onClose={handleToast}*/}
+        {/*    content={"Please wait..."}*/}
+        {/*  ></Toast>*/}
+        {/*)}*/}
         <div
           className={
             "w-full h-full flex flex-col justify-center items-center overflow-hidden md:w-3/4 md:h-full"
@@ -82,7 +94,20 @@ export const WriteBlogs = () => {
                     name={field.name}
                     id={field.id}
                     placeholder={field.placeholder}
-                    maxLength={field.maxLength}
+                    maxLength={
+                      field.name === "title"
+                        ? 80
+                        : field.name === "summary"
+                          ? 250
+                          : null
+                    }
+                    // minLength={
+                    //   field.name === "title"
+                    //     ? 80
+                    //     : field.name === "summary"
+                    //       ? 250
+                    //       : null
+                    // }
                     onChange={
                       field.type === "file"
                         ? handleProfilePictureChange

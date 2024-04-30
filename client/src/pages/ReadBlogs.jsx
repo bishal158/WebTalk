@@ -167,7 +167,12 @@ export const ReadBlogs = () => {
                               )}
                             </time>
                           </p>
-                          <Link className={""} to={`/post/${post._id}`}>
+                          <Link
+                            className={
+                              "max-w-fit mb-3 py-2 bg-blue-950 text-white font-medium rounded-[8px] px-2 hover:-translate-y-1 hover:scale-10 duration-300"
+                            }
+                            to={`/post/${post._id}`}
+                          >
                             Read More
                           </Link>
                         </div>

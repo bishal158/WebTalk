@@ -67,7 +67,10 @@ export const Login = () => {
                 return (
                   <div key={index} className={field.div_class}>
                     <span className={field.span_class}>
-                      <FontAwesomeIcon icon={field.icon_1} />
+                      <FontAwesomeIcon
+                        icon={field.icon_1}
+                        className={"animate-bounce"}
+                      />
                     </span>
                     <input
                       className={field.input_class}

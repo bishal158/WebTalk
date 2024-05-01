@@ -65,7 +65,7 @@ export const RootLayout = ({ children }) => {
             </div>
           )}
         </nav>
-        <div className={"h-screen w-full "}>{children}</div>
+        <div className={"w-full h-full"}>{children}</div>
       </main>
     </div>
   );

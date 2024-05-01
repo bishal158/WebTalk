@@ -14,71 +14,37 @@ import { ReadBlogs } from "./pages/ReadBlogs.jsx";
 import { Protected } from "./utils/Protected.jsx";
 import { EditPost } from "./pages/EditPost.jsx";
 import { Post } from "./pages/Post.jsx";
+import { Footer } from "./layouts/Footer.jsx";
 
 function App() {
   return (
     <>
       <RootLayout>
-        <Routes>
-          <Route path={"/"} element={<Home />} />
-          <Route path={"/login"} element={<Login />} />
-          <Route path={"/register"} element={<Register />} />
-          <Route
-            path={"/read-blogs"}
-            element={<Protected Component={ReadBlogs} />}
-          />
-          <Route path={"/post/:id"} element={<Protected Component={Post} />} />
-          <Route
-            path={"/write-blogs"}
-            element={<Protected Component={WriteBlogs} />}
-          />
-          <Route
-            path="/post/edit/:id"
-            element={<Protected Component={EditPost} />}
-          />
-        </Routes>
+        <Footer>
+          <Routes>
+            <Route path={"/"} element={<Home />} />
+            <Route path={"/login"} element={<Login />} />
+            <Route path={"/register"} element={<Register />} />
+            <Route
+              path={"/read-blogs"}
+              element={<Protected Component={ReadBlogs} />}
+            />
+            <Route
+              path={"/post/:id"}
+              element={<Protected Component={Post} />}
+            />
+            <Route
+              path={"/write-blogs"}
+              element={<Protected Component={WriteBlogs} />}
+            />
+            <Route
+              path="/post/edit/:id"
+              element={<Protected Component={EditPost} />}
+            />
+          </Routes>
+        </Footer>
       </RootLayout>
     </>
-
-    // <User_Context_Provider>
-    //   <header>
-    //     <Header />
-    //   </header>
-    //   <main>
-    //     <Routes>
-    //       <Route path="/" element={<Home />} />
-    //       <Route
-    //         path="read_blogs"
-    //         element={
-    //           <React.Suspense fallback={<LoadingSpinner />}>
-    //             <Read_Blogs />
-    //           </React.Suspense>
-    //         }
-    //       />
-    //       <Route
-    //         path="write_blogs"
-    //         element={
-    //           <React.Suspense fallback={<LoadingSpinner />}>
-    //             <Write_Blogs />
-    //           </React.Suspense>
-    //         }
-    //       />
-    //       <Route
-    //         path="contact_us"
-    //         element={
-    //           <React.Suspense fallback={<LoadingSpinner />}>
-    //             <Contact_Us />
-    //           </React.Suspense>
-    //         }
-    //       />
-    //       <Route path="login" element={<Login />} />
-    //       <Route path="register" element={<Register />} />
-    //       <Route path="/post/:id" element={<Read_Full_Blog />} />
-    //       <Route path="/edit/:id" element={<Edit_Blogs />} />
-    //     </Routes>
-    //   </main>
-    //   <footer></footer>
-    // </User_Context_Provider>
   );
 }
 

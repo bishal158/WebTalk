@@ -24,7 +24,7 @@ export const ReadBlogs = () => {
   };
   return (
     <div>
-      <section className={"w-full h-screen flex flex-wrap gap-0 "}>
+      <section className={"w-full md:h-screen h-full  flex flex-wrap gap-0 "}>
         <div className={"w-full h-fit md:w-1/4 md:h-full flex flex-col p-2"}>
           <input
             onChange={(e) => setSearchTerm(e.target.value)}

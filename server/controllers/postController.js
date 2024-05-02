@@ -138,6 +138,27 @@ const updatePost = (req, res) => {
     }
   });
 };
+const getTrendingPosts = async (req, res, next) => {
+  try {
+    const aggregation = [
+      {
+        $unwind: "$likes", // Unwind the likes array to access individual likes
+      },
+      {
+        $group: {
+          _id: "$_id", // Group by post ID
+          likesCount: { $sum: 1 }, // Count the number of likes in the unwound array
+        },
+      },
+      { $sort: { likesCount: -1 } }, // Sort by likes count descending
+      { $limit: 10 }, // Limit to top 10 posts (optional)
+    ];
+    const trendingPosts = await Post.aggregate(aggregation);
+    res.status(200).json(trendingPosts);
+  } catch (e) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 const likePost = async (req, res, next) => {
   const { id } = req.params;
 };
@@ -151,3 +172,4 @@ exports.deletePost = deletePost;
 exports.updatePost = updatePost;
 exports.likePost = likePost;
 exports.disLikePost = disLikePost;
+exports.getTrendingPosts = getTrendingPosts;

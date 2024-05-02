@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Editor } from "@tinymce/tinymce-react";
 import { editorInit } from "../constants/constants.js";
 import writing_img from "../assets/images/Write.gif";
-import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
+import { LoadingSpinner } from "../components/static/LoadingSpinner.jsx";
 
 export const EditPost = () => {
   const dispatch = useDispatch();

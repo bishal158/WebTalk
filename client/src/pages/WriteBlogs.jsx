@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { savePost } from "../redux/postSlice.js";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "../utils/Toast.jsx";
-import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
+import { LoadingSpinner } from "../components/static/LoadingSpinner.jsx";
 
 export const WriteBlogs = () => {
   const [showToast, setShowToast] = useState(true);

@@ -9,9 +9,11 @@ import {
 import { base_url } from "../constants/constants.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment-timezone";
-import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
+import { LoadingSpinner } from "../components/static/LoadingSpinner.jsx";
 import { DeleteModal } from "../utils/DeleteModal.jsx";
 import { NotAvailableModal } from "../utils/NotAvailableModal.jsx";
+import { TrendingNow } from "../components/TrendingNow.jsx";
+import { WriteComment } from "../components/WriteComment.jsx";
 
 export const Post = () => {
   const navigation = useNavigate();
@@ -30,11 +32,6 @@ export const Post = () => {
   const deletePost = async () => {
     dispatch(deleteSinglePost(id));
   };
-  // useEffect(() => {
-  //   if (deleted) {
-  //     navigation("/read-blogs");
-  //   }
-  // }, [deleted]);
   const likeIt = () => {
     console.log("liked");
     dispatch(likedPost(id));
@@ -44,6 +41,7 @@ export const Post = () => {
     setLiked(false);
     console.log("dislike");
   };
+  // post not found
   if (!postInfo) {
     if (isLoading) {
       return <LoadingSpinner />;
@@ -57,8 +55,13 @@ export const Post = () => {
   }
   return (
     <div>
+      <h1 className={"w-full h-fit text-3xl px-3 font-bold text-[#1f1f1f]"}>
+        {postInfo.title}
+      </h1>
       <section
-        className={"w-full h-full flex flex-wrap justify-start px-3 py-4 "}
+        className={
+          "w-full h-full flex  flex-wrap justify-start items-start px-3 py-4 "
+        }
       >
         {show && (
           <DeleteModal onDelete={deletePost} onClose={handleClose}>
@@ -73,7 +76,7 @@ export const Post = () => {
         {isLoading ? <LoadingSpinner /> : null}
         <div
           className={
-            "md:w-3/4 flex flex-col w-full h-fit bg-[#EDF0F2]  rounded-[10px] dark:bg-black shadow-sky-50 shadow-xl dark:text-white "
+            "md:w-3/4 flex flex-col w-full h-fit bg-[#EDF0F2]  rounded-[10px] dark:bg-black  dark:text-white "
           }
         >
           <div className={"w-full h-full  flex justify-center items-center"}>
@@ -191,8 +194,16 @@ export const Post = () => {
             </span>
           </div>
         </div>
-        <div className={"md:w-1/4 h-fit w-full flex flex-col "}>
-          Popular Details
+        <div className={"md:w-1/4 h-fit w-full flex flex-col md:px-3 mt-2"}>
+          <WriteComment />
+          <h1
+            className={
+              "w-full h-10 bg-gray-900 border flex justify-center items-center text-center text-white font-normal rounded-[8px] text-[20px] py-4"
+            }
+          >
+            Trending Now
+          </h1>
+          <TrendingNow />
         </div>
       </section>
     </div>

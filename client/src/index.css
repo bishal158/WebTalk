@@ -34,7 +34,7 @@ aside.close {
 }
 
 .animate-character {
-    @apply text-center uppercase bg-[linear-gradient(_-225deg,#231557_0%,#44107a_29%,#ff1361_67%,#fff800_100%_)] bg-[auto_auto] bg-clip-border bg-[200%_auto] text-white animate-[textclip_2s_linear_infinite] flex text-[100px];
+    @apply text-center uppercase bg-[linear-gradient(_-225deg,#231557_0%,#44107a_29%,#ff1361_67%,#fff800_100%_)] bg-[auto_auto] bg-clip-border bg-[200%_auto] text-white animate-[textclip_2s_linear_infinite] flex text-[50px];
     justify-content: start;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

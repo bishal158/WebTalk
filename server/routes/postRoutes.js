@@ -9,6 +9,7 @@ const {
   disLikePost,
   deletePost,
   updatePost,
+  getTrendingPosts,
 } = require("../controllers/postController");
 
 const multer = require("multer");
@@ -21,5 +22,5 @@ router.delete("/deletePost/:id", deletePost);
 router.put("/updatePost/:id", upload.single("cover"), updatePost);
 router.put("/likedPost/:id", likePost);
 router.put("/disLikedPost/:id", disLikePost);
-
+router.get("/getTrendingPosts", getTrendingPosts);
 module.exports = router;

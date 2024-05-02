@@ -16,7 +16,18 @@ export const savePost = createAsyncThunk(
     }
   },
 );
-
+// getting trending posts
+export const getTrendingPosts = createAsyncThunk(
+  "posts/getTrendingPosts",
+  async (postData, thunkAPI) => {
+    try {
+      const trendingPosts = await axios.get(base_url + "post/getTrendingPosts");
+      return trendingPosts.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
 // getting all posts
 export const getAllPosts = createAsyncThunk(
   "post/getAllPosts",

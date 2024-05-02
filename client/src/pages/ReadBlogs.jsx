@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { categories } from "../constants/inputs.js";
 import { base_url } from "../constants/constants.js";
 import moment from "moment-timezone";
-import { LoadingSpinner } from "../components/LoadingSpinner.jsx";
+import { LoadingSpinner } from "../components/static/LoadingSpinner.jsx";
 import { Link } from "react-router-dom";
 
 export const ReadBlogs = () => {
@@ -31,7 +31,7 @@ export const ReadBlogs = () => {
             id={"search"}
             name={"search"}
             className={
-              "w-full rounded-[3px] border-[2px] border-black placeholder:text-gray-600 p-2 mb-2"
+              "w-full rounded-[10px] border-[2px] border-black placeholder:text-gray-600 p-2 mb-2"
             }
             placeholder={"Search for posts"}
           />

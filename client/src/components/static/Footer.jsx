@@ -87,7 +87,8 @@ export const Footer = () => {
               "w-full text-center flex justify-center items-center font-normal mb-3 text-fuchsia-50 text-[16px] md:justify-start md:items-start"
             }
           >
-            Copyright &copy; <a href="https://www.webtalk.com">Web Talk</a>.
+            Copyright &copy;{" "}
+            <a href="https://www.webtalk.com"> Web Talk 2024</a>
           </p>
           <p
             className={

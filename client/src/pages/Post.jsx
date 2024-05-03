@@ -14,6 +14,7 @@ import { DeleteModal } from "../utils/DeleteModal.jsx";
 import { NotAvailableModal } from "../utils/NotAvailableModal.jsx";
 import { TrendingNow } from "../components/TrendingNow.jsx";
 import { WriteComment } from "../components/WriteComment.jsx";
+import { PostComments } from "../components/PostComments.jsx";
 
 export const Post = () => {
   const navigation = useNavigate();
@@ -23,6 +24,7 @@ export const Post = () => {
   const { posts, isLoading, error, success, postInfo, deleted } = useSelector(
     (state) => state.post,
   );
+
   const { userInfo } = useSelector((state) => state.auth);
   const { id } = useParams();
   const [liked, setLiked] = useState(false);
@@ -74,6 +76,7 @@ export const Post = () => {
           </DeleteModal>
         )}
         {isLoading ? <LoadingSpinner /> : null}
+        {/*Post detail and comment side*/}
         <div
           className={
             "md:w-3/4 flex flex-col w-full h-fit bg-[#EDF0F2]  rounded-[10px] dark:bg-black  dark:text-white "
@@ -158,15 +161,19 @@ export const Post = () => {
             Post Details
           </h1>
           <div
-            className={"w-full h-full p-2 mb-3 mt-2 bg-[#fff] overflow-hidden "}
+            className={
+              "w-full h-full p-2  mt-2 bg-[#F9FAFB] overflow-hidden dark:text-white border-[2px]"
+            }
             dangerouslySetInnerHTML={{ __html: postInfo.content }}
           ></div>
           <div
             className={
-              "w-full h-full flex justify-between items-center mb-3 text-[20px] font-bold text-blue-950  px-3"
+              "w-full h-full flex justify-between items-center mb-3 text-[20px] font-bold text-blue-950 py-2 px-3 border-[2px]"
             }
           >
-            <p className={"text-gray-950 md:text-2xl"}>Do you like it ?</p>
+            <p className={"text-blue-500 md:text-[18px] font-bold"}>
+              Do you like it ?
+            </p>
             <span>
               {liked ? (
                 <FontAwesomeIcon
@@ -193,8 +200,10 @@ export const Post = () => {
               )}
             </span>
           </div>
+          <PostComments />
         </div>
-        <div className={"md:w-1/4 h-fit w-full flex flex-col md:px-3 mt-2"}>
+        {/*Write comments and Trending Post Side*/}
+        <div className={"md:w-1/4 h-fit w-full flex flex-col md:px-3 mt-2  "}>
           <WriteComment />
           <h1
             className={
@@ -203,6 +212,15 @@ export const Post = () => {
           >
             Trending Now
           </h1>
+          <p>
+            {postInfo.comments.map((comment, index) => {
+              return (
+                <span key={index}>
+                  {comment.commentedBy === userInfo._id ? "yes" : "no"}
+                </span>
+              );
+            })}
+          </p>
           <TrendingNow />
         </div>
       </section>

@@ -8,6 +8,22 @@
     box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+    height: 0.3rem;
+    width: 0.2rem;
+
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(247, 245, 245, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(8, 8, 8, 0.6);
+    border-radius: 0.5rem;
+
+}
+
 h3 {
     font-size: 21px;
     font-weight: bold;

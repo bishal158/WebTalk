@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const Post = require("../models/post");
+const Comment = require("../models/postcomment");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
@@ -73,7 +74,9 @@ const getFilteredPosts = async (req, res, next) => {
 const getSinglePost = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const postInfo = await Post.findById(id).populate("author");
+    const postInfo = await Post.findById(id)
+      .populate("author", ["name", "email", "avatar"])
+      .populate("comments");
     // console.log(postInfo);
     if (postInfo) {
       res.status(200).json(postInfo);
@@ -164,6 +167,36 @@ const likePost = async (req, res, next) => {
 };
 const disLikePost = async (req, res, next) => {};
 
+const saveComment = async (req, res, next) => {
+  const { postId, comment } = req.body;
+  const { token } = req.cookies;
+  // console.log(comment);
+  // console.log(postId);
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      res.status(404).json({ message: "Post Not Found" });
+    }
+    jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
+      if (error) throw error;
+      const newComment = await Comment.create({
+        postId: post._id,
+        commentedBy: info._id,
+        comment: comment,
+      });
+      await Post.updateOne(
+        { _id: post._id },
+        {
+          $push: { comments: newComment._id },
+        },
+      );
+      res.status(200).json({ message: "Commented successfully" });
+    });
+  } catch (e) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 exports.savePost = savePost;
 exports.getAllPosts = getAllPosts;
 exports.getFilteredPosts = getFilteredPosts;
@@ -173,3 +206,4 @@ exports.updatePost = updatePost;
 exports.likePost = likePost;
 exports.disLikePost = disLikePost;
 exports.getTrendingPosts = getTrendingPosts;
+exports.saveComment = saveComment;

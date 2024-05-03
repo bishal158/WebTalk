@@ -110,7 +110,21 @@ export const ReadBlogs = () => {
                           alt={"ssss"}
                         />
                       </div>
-                      <div className={"md:w-4/5 h-full w-full px-2"}>
+                      <div className={"md:w-4/5 h-full w-full px-2 py-4"}>
+                        <div
+                          className={"w-full flex items-center justify-start"}
+                        >
+                          <img
+                            className={
+                              "w-10 h-10 rounded border-blue-950 border-[1px] mx-1"
+                            }
+                            src={base_url + "/" + post.author.avatar}
+                            alt={"...."}
+                          />
+                          <span className={"w-auto text-red-800 font-medium"}>
+                            {post.author.name}
+                          </span>
+                        </div>
                         <h1
                           className={
                             "w-full h-auto flex justify-start items-center font-bold text-[22px] "
@@ -127,32 +141,32 @@ export const ReadBlogs = () => {
                         </p>
                         <div
                           className={
-                            "w-full font-bold flex items-center justify-between"
+                            "w-full h-fit py-2 px-3 font-bold flex items-center md:justify-start justify-between"
                           }
                         >
-                          <div className={"w-4/5 py-2 flex items-center"}>
-                            <img
-                              className={
-                                "w-10 h-10 rounded-full border-blue-950 border-2 mx-1"
-                              }
-                              src={base_url + "/" + post.author.avatar}
-                              alt={"...."}
-                            />
-                            <span className={"w-auto text-red-800"}>
-                              {post.author.name}
-                            </span>
-                          </div>
                           <span
                             className={
-                              "w-auto flex items-center justify-center text-[16px] text-blue-800"
+                              "w-1/2 h-auto flex items-center justify-start text-[16px] text-blue-800 "
                             }
                           >
                             <FontAwesomeIcon
                               icon="fa-solid fa-thumbs-up"
                               size={"lg"}
+                              className={"mr-1"}
+                            />
+                            {post.likes.length + "+"}
+                          </span>
+                          <span
+                            className={
+                              "w-1/2 h-auto flex items-center justify-end text-[16px] text-rose-600"
+                            }
+                          >
+                            <FontAwesomeIcon
+                              icon="fa-solid fa-comment"
+                              size={"lg"}
                               className={"mx-1"}
                             />
-                            {post.likes.length}
+                            {post.comments.length + "+"}
                           </span>
                         </div>
                         <div

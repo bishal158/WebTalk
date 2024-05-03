@@ -129,6 +129,23 @@ export const likedPost = createAsyncThunk(
 );
 // dislike a post
 
+// save a comment of a post
+export const saveComment = createAsyncThunk(
+  "post/comment/saveComment",
+  async (commentData, thunkAPI) => {
+    try {
+      const comment = await axios.post(
+        base_url + `/post/comment/saveComment`,
+        commentData,
+        { withCredentials: true },
+      );
+      return comment.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
+
 // post slice
 const postSlice = createSlice({
   name: "post",
@@ -203,7 +220,6 @@ const postSlice = createSlice({
       })
       /** get Single Post Info **/
       .addCase(getSinglePost.pending, (state, action) => {
-        state.posts = [...state.posts];
         state.success = false;
         state.error = null;
         state.isLoading = true;
@@ -213,13 +229,11 @@ const postSlice = createSlice({
         state.isLoading = false;
         state.success = true;
         state.error = null;
-        state.posts = [...state.posts];
         state.postInfo = action.payload;
       })
       .addCase(getSinglePost.rejected, (state, action) => {
         state.isLoading = false;
         state.success = true;
-        state.posts = [...state.posts];
         state.error = action.payload;
         state.postInfo = null;
       })
@@ -271,6 +285,18 @@ const postSlice = createSlice({
         state.success = false;
         state.error = action.payload;
         state.liked = false;
+      })
+      /** save a comment **/
+      .addCase(saveComment.pending, (state, action) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(saveComment.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(saveComment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });

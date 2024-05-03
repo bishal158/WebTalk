@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { saveComment } from "../redux/postSlice.js";
 
 export const WriteComment = () => {
   const { id } = useParams();
+  const commentRef = useRef(null);
+  const dispatch = useDispatch();
   const [commentData, setCommentData] = useState({
     postId: id,
     comment: "",
@@ -14,9 +18,14 @@ export const WriteComment = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const comment = (e) => {
+  const comment = async (e) => {
     e.preventDefault();
-    console.log(commentData);
+    commentRef.current.value = null;
+    try {
+      await dispatch(saveComment(commentData));
+    } catch (error) {
+      throw new error();
+    }
   };
   return (
     <>
@@ -34,6 +43,7 @@ export const WriteComment = () => {
             placeholder="Write your thoughts here..."
             name="comment"
             id="comment"
+            ref={commentRef}
             onChange={handleChange}
           ></textarea>
           <button className={"w-full flex justify-end items-center py-2"}>

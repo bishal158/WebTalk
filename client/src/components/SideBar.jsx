@@ -10,17 +10,12 @@ import { logoutUser } from "../redux/authSlice.js";
 import { Cookies } from "react-cookie";
 
 export const SideBar = () => {
-  // const [userInfo, setUserInfo] = useState([]);
   const navigation = useNavigate();
   const cookies = new Cookies();
   const { isLoading, error, success, userInfo } = useSelector(
     (state) => state.auth,
   );
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   let user = localStorage.getItem("userInfo");
-  //   setUserInfo(JSON.parse(user));
-  // }, []);
   const [dark, setDark] = useState(false);
   const setMode = () => {
     setDark(!dark);
@@ -66,10 +61,12 @@ export const SideBar = () => {
             src={userInfo.avatar}
             alt={"..."}
             className={
-              "rounded-full w-[50px] h-[50px] overflow-hidden border-emerald-700 border-2"
+              "rounded-full w-[50px] h-[50px] overflow-hidden border-emerald-700 border-2 mr-1"
             }
           />
-          <span className={"text-[20px] whitespace-pre"}>{userInfo.name}</span>
+          <span className={"text-[16px] whitespace-pre font-bold"}>
+            {userInfo.name}
+          </span>
         </div>
       ) : (
         <div

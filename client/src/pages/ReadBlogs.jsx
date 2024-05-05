@@ -23,8 +23,8 @@ export const ReadBlogs = () => {
     setFilterBy(value);
   };
   return (
-    <div>
-      <section className={"w-full md:h-screen h-full  flex flex-wrap gap-0 "}>
+    <>
+      <section className={"w-full h-full flex flex-wrap gap-0"}>
         <div className={"w-full h-fit md:w-1/4 md:h-full flex flex-col p-2"}>
           <input
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -61,7 +61,7 @@ export const ReadBlogs = () => {
             })}
           </div>
         </div>
-        <div className={"w-full h-full p-2 md:w-3/4 flex flex-col"}>
+        <div className={"w-full p-2 md:w-3/4 flex flex-col"}>
           <h3
             className={
               "w-full text-2xl font-bold flex items-center py-2 text-blue-950"
@@ -197,6 +197,6 @@ export const ReadBlogs = () => {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };

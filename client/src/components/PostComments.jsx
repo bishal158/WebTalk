@@ -1,12 +1,21 @@
 import { useParams } from "react-router-dom";
 import avatar from "../assets/images/User.jpg";
 import moment from "moment-timezone";
-import React from "react";
-import { date } from "yup";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllComments } from "../redux/postSlice.js";
+import { base_url } from "../constants/constants.js";
 
 export const PostComments = () => {
+  const dispatch = useDispatch();
+  const { isLoading, error, postInfo, postComments } = useSelector(
+    (state) => state.post,
+  );
+  const { userInfo } = useSelector((state) => state.auth);
   const { id } = useParams();
-
+  useEffect(() => {
+    dispatch(getAllComments(id));
+  }, [dispatch, id, isLoading]);
   return (
     <>
       <div
@@ -22,25 +31,37 @@ export const PostComments = () => {
             "w-full h-56 overflow-y-scroll bg-[#F9FAFB] rounded flex flex-col justify-start items-start p-2 border-[2px] "
           }
         >
-          <div
-            className={
-              "w-full flex h-fit max-h-fit overflow-hidden justify-start items-center mt-3 bg-[#FFFFFF] text-[11px] rounded shadow-gray-200 shadow-2xl"
-            }
-          >
-            <div className={" h-full p-4"}>
-              <img src={avatar} alt={"profile"} className={"w-10 h-10 "} />
-            </div>
-            <div className={"w-3/4 h-full"}>
-              <h6 className={"font-bold"}>Mafuj Ahmed Bishal</h6>
-              <p className={"text-justify "}>
-                definitiones morbi adipisci dico litora referrentur definitiones
-                has interesset commune menandri eget graeci blandit euismod
-              </p>
-              <time className={"text-[10px] font-bold"}>
-                {moment(Date.now()).format("Do MMM, YYYY ddd, hh:mm A ")}
-              </time>
-            </div>
-          </div>
+          {postComments.map((comment) => {
+            return (
+              <div
+                className={
+                  "w-full flex h-auto justify-start items-center mt-3 bg-[#FFFFFF] text-[11px] rounded shadow-gray-200 shadow-2xl"
+                }
+                key={comment._id}
+              >
+                <div className={"w-auto h-full p-2 "}>
+                  <img
+                    src={base_url + "/" + comment.commentedBy.avatar}
+                    alt={"profile"}
+                    className={"w-10 h-10 "}
+                  />
+                </div>
+                <div className={"w-3/4 h-full p-2"}>
+                  <h6 className={"font-bold"}>
+                    {userInfo._id === comment.commentedBy._id
+                      ? "You"
+                      : comment.commentedBy.name}
+                  </h6>
+                  <p className={"text-justify "}>{comment.comment}</p>
+                  <time className={"text-[10px] font-bold"}>
+                    {moment(comment.createdAt).format(
+                      "Do MMM, YYYY ddd, hh:mm A ",
+                    )}
+                  </time>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </>

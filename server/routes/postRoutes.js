@@ -6,11 +6,12 @@ const {
   getFilteredPosts,
   getSinglePost,
   likePost,
-  disLikePost,
   deletePost,
   updatePost,
   getTrendingPosts,
   saveComment,
+  getAllComments,
+  getAllLikes,
 } = require("../controllers/postController");
 
 const multer = require("multer");
@@ -21,8 +22,9 @@ router.get("/getFilteredPosts", getFilteredPosts);
 router.get("/getSinglePost/:id", getSinglePost);
 router.delete("/deletePost/:id", deletePost);
 router.put("/updatePost/:id", upload.single("cover"), updatePost);
-router.put("/likedPost/:id", likePost);
-router.put("/disLikedPost/:id", disLikePost);
+router.post("/likedPost/:id", likePost);
 router.get("/getTrendingPosts", getTrendingPosts);
 router.post("/comment/saveComment", saveComment);
+router.get("/comment/post/:id/allComments", getAllComments);
+router.get("/likes/post/:id/allLikes", getAllLikes);
 module.exports = router;

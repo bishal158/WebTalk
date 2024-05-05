@@ -149,7 +149,7 @@ export const categories = [
     value: "Fiction",
   },
   {
-    value: "Software Engineering",
+    value: "Software Development",
   },
   {
     value: "Robotics",
@@ -167,6 +167,15 @@ export const categories = [
     value: "Russia vs Nato",
   },
   {
-    value: "Geopolitics ",
+    value: "Geopolitics",
+  },
+  {
+    value: "Artificial Intelligence",
+  },
+  {
+    value: "Machine Learning",
+  },
+  {
+    value: "Web Development",
   },
 ];

@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteSinglePost,
+  getAllComments,
+  getAllLikes,
   getSinglePost,
   likedPost,
 } from "../redux/postSlice.js";
@@ -17,14 +19,11 @@ import { WriteComment } from "../components/WriteComment.jsx";
 import { PostComments } from "../components/PostComments.jsx";
 
 export const Post = () => {
-  const navigation = useNavigate();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(!show);
   const dispatch = useDispatch();
-  const { posts, isLoading, error, success, postInfo, deleted } = useSelector(
-    (state) => state.post,
-  );
-
+  const { posts, isLoading, error, postInfo, postComments, postLikes } =
+    useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.auth);
   const { id } = useParams();
   const [liked, setLiked] = useState(false);
@@ -34,15 +33,15 @@ export const Post = () => {
   const deletePost = async () => {
     dispatch(deleteSinglePost(id));
   };
-  const likeIt = () => {
-    console.log("liked");
-    dispatch(likedPost(id));
-    setLiked(true);
+  const toggleLike = async () => {
+    try {
+      await dispatch(likedPost(id));
+      setLiked(!liked);
+    } catch (e) {
+      console.error(e);
+    }
   };
-  const dislikeIt = () => {
-    setLiked(false);
-    console.log("dislike");
-  };
+
   // post not found
   if (!postInfo) {
     if (isLoading) {
@@ -56,7 +55,7 @@ export const Post = () => {
     );
   }
   return (
-    <div>
+    <>
       <h1 className={"w-full h-fit text-3xl px-3 font-bold text-[#1f1f1f]"}>
         {postInfo.title}
       </h1>
@@ -162,42 +161,27 @@ export const Post = () => {
           </h1>
           <div
             className={
-              "w-full h-full p-2  mt-2 bg-[#F9FAFB] overflow-hidden dark:text-white border-[2px]"
+              "w-full h-full p-2  mt-2 bg-[#F9FAFB] overflow-hidden dark:text-white border-[2px] list-item"
             }
             dangerouslySetInnerHTML={{ __html: postInfo.content }}
           ></div>
           <div
             className={
-              "w-full h-full flex justify-between items-center mb-3 text-[20px] font-bold text-blue-950 py-2 px-3 border-[2px]"
+              "w-full h-full flex justify-between items-center mb-3 text-[24px] font-bold text-blue-950 py-2 px-3 border-[2px]"
             }
           >
-            <p className={"text-blue-500 md:text-[18px] font-bold"}>
-              Do you like it ?
+            <p className={"text-blue-500 md:text-[24px] font-bold"}>
+              Do you like the post ?
             </p>
             <span>
-              {liked ? (
-                <FontAwesomeIcon
-                  icon="fa-solid fa-thumbs-down"
-                  onClick={dislikeIt}
-                  className={`${
-                    liked
-                      ? "text-red-600 hover:animate-bounce"
-                      : "text-blue-500 hover:animate-bounce"
-                  }`}
-                  size={"lg"}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon="fa-solid fa-thumbs-up"
-                  onClick={likeIt}
-                  size={"lg"}
-                  className={`${
-                    liked
-                      ? "text-red-600 hover:animate-bounce"
-                      : "text-blue-500 hover:animate-bounce"
-                  }`}
-                />
-              )}
+              <FontAwesomeIcon
+                icon="fa-solid fa-heart"
+                onClick={toggleLike}
+                className={`${
+                  liked ? "text-red-600" : "text-gray-600"
+                } transition-colors duration-100 ease-in-out`}
+                size={"lg"}
+              />
             </span>
           </div>
           <PostComments />
@@ -212,18 +196,9 @@ export const Post = () => {
           >
             Trending Now
           </h1>
-          <p>
-            {postInfo.comments.map((comment, index) => {
-              return (
-                <span key={index}>
-                  {comment.commentedBy === userInfo._id ? "yes" : "no"}
-                </span>
-              );
-            })}
-          </p>
           <TrendingNow />
         </div>
       </section>
-    </div>
+    </>
   );
 };

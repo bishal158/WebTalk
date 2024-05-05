@@ -74,7 +74,7 @@ export const getSinglePost = createAsyncThunk(
 export const deleteSinglePost = createAsyncThunk(
   "post/deletePost",
   async (id, thunkAPI) => {
-    console.log(id);
+    // console.log(id);
     try {
       const deletePost = await axios.delete(
         base_url + `/post/deletePost/${id}`,
@@ -112,9 +112,8 @@ export const updatePost = createAsyncThunk(
 export const likedPost = createAsyncThunk(
   "post/liked",
   async (id, thunkAPI) => {
-    // console.log(id);
     try {
-      const likedPost = await axios.put(
+      const likedPost = await axios.post(
         base_url + `/post/likedPost/${id}`,
         {},
         {
@@ -127,8 +126,20 @@ export const likedPost = createAsyncThunk(
     }
   },
 );
-// dislike a post
-
+// get all likes of a post
+export const getAllLikes = createAsyncThunk(
+  "post/liked/allLikes",
+  async (postId, thunkAPI) => {
+    try {
+      const likes = await axios.get(
+        base_url + `/likes/post/${postId}/allLikes`,
+      );
+      return likes.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  },
+);
 // save a comment of a post
 export const saveComment = createAsyncThunk(
   "post/comment/saveComment",
@@ -145,7 +156,21 @@ export const saveComment = createAsyncThunk(
     }
   },
 );
-
+// get all comments of a post
+export const getAllComments = createAsyncThunk(
+  "post/comment/allComments",
+  async (postId, thunkAPI) => {
+    try {
+      const comments = await axios.get(
+        base_url + `/post/comment/post/${postId}/allComments`,
+        { withCredentials: true },
+      );
+      return comments.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  },
+);
 // post slice
 const postSlice = createSlice({
   name: "post",
@@ -155,8 +180,9 @@ const postSlice = createSlice({
     success: false,
     postInfo: null,
     posts: [],
-    liked: false,
     deleted: false,
+    postComments: [],
+    postLikes: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -269,22 +295,28 @@ const postSlice = createSlice({
       /** like this post **/
       .addCase(likedPost.pending, (state, action) => {
         state.isLoading = true;
-        state.success = false;
         state.error = null;
-        state.liked = false;
       })
       .addCase(likedPost.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.success = true;
         state.error = null;
-        state.liked = true;
-        state.postInfo = action.payload;
+        state.isLoading = false;
       })
       .addCase(likedPost.rejected, (state, action) => {
         state.isLoading = false;
-        state.success = false;
         state.error = action.payload;
-        state.liked = false;
+      })
+      /** get all likes of a post **/
+      .addCase(getAllLikes.pending, (state, action) => {
+        state.error = null;
+        state.postLikes = [];
+      })
+      .addCase(getAllLikes.fulfilled, (state, action) => {
+        state.error = null;
+        state.postLikes = action.payload;
+      })
+      .addCase(getAllLikes.rejected, (state, action) => {
+        state.error = action.payload;
+        state.postLikes = [];
       })
       /** save a comment **/
       .addCase(saveComment.pending, (state, action) => {
@@ -297,6 +329,18 @@ const postSlice = createSlice({
       .addCase(saveComment.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      /** get all comments of a post **/
+      .addCase(getAllComments.pending, (state, action) => {
+        state.error = null;
+        state.postComments = [];
+      })
+      .addCase(getAllComments.fulfilled, (state, action) => {
+        state.postComments = action.payload;
+      })
+      .addCase(getAllComments.rejected, (state, action) => {
+        state.error = action.payload;
+        state.postComments = [];
       });
   },
 });

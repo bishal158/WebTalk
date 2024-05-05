@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Post = require("../models/post");
 const Comment = require("../models/postcomment");
+const Like = require("../models/postlike");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
@@ -8,7 +9,6 @@ const filesystem = require("fs");
 
 // save a single post
 const savePost = async (req, res, next) => {
-  console.log(req.file);
   if (!req.file) {
     res.status(404).json({ message: "Upload a cover image" });
   } else {
@@ -41,7 +41,9 @@ const savePost = async (req, res, next) => {
 // get all the posts
 const getAllPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find().populate("author").sort({ createdAt: -1 });
+    const posts = await Post.find()
+      .populate("author", ["name", "email", "avatar"])
+      .sort({ createdAt: -1 });
     res.status(201).json(posts);
   } catch (e) {
     res.status(500).json({ message: "Server error" });
@@ -56,12 +58,12 @@ const getFilteredPosts = async (req, res, next) => {
   try {
     if (category === "All") {
       const posts = await Post.find()
-        .populate("author")
+        .populate("author", ["name", "email", "avatar"])
         .sort({ createdAt: -1 });
       res.status(200).json(posts);
     } else {
       const filteredPosts = await Post.find(filter)
-        .populate("author")
+        .populate("author", ["name", "email", "avatar"])
         .sort({ createdAt: -1 });
       res.status(200).json(filteredPosts);
     }
@@ -164,14 +166,55 @@ const getTrendingPosts = async (req, res, next) => {
 };
 const likePost = async (req, res, next) => {
   const { id } = req.params;
+  const { token } = req.cookies;
+  jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
+    if (error) throw error;
+    const post = await Post.findById(id);
+    if (!post) {
+      res.status(404).json({ message: "No blog post found" });
+    } else {
+      const like = await Like.findOne({
+        postId: id,
+        likedBy: info._id,
+      });
+      try {
+        if (!like) {
+          const newLike = await Like.create({
+            postId: id,
+            likedBy: info._id,
+          });
+          await Post.updateOne(
+            { _id: post._id },
+            {
+              $push: { likes: newLike._id },
+            },
+          );
+          res.status(200).json({
+            message: "Liked successfully",
+            liked: true,
+          });
+        } else {
+          await Like.deleteOne({ _id: like._id });
+          await Post.updateOne(
+            { _id: like.postId },
+            {
+              $pull: { likes: like._id },
+            },
+          );
+          res
+            .status(200)
+            .json({ message: "Like successfully removed", liked: false });
+        }
+      } catch (e) {
+        res.status(400).json({ message: e.message });
+      }
+    }
+  });
 };
-const disLikePost = async (req, res, next) => {};
 
 const saveComment = async (req, res, next) => {
   const { postId, comment } = req.body;
   const { token } = req.cookies;
-  // console.log(comment);
-  // console.log(postId);
   try {
     const post = await Post.findById(postId);
     if (!post) {
@@ -196,7 +239,31 @@ const saveComment = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
+const getAllComments = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const comments = await Comment.find({ postId: id }).populate(
+      "commentedBy",
+      ["name", "email", "avatar"],
+    );
+    res.status(200).json(comments);
+  } catch (e) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+const getAllLikes = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const likes = await Like.find({ postId: id }).populate("likedBy", [
+      "name",
+      "email",
+      "avatar",
+    ]);
+    res.status(200).json(likes);
+  } catch (e) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 exports.savePost = savePost;
 exports.getAllPosts = getAllPosts;
 exports.getFilteredPosts = getFilteredPosts;
@@ -204,6 +271,7 @@ exports.getSinglePost = getSinglePost;
 exports.deletePost = deletePost;
 exports.updatePost = updatePost;
 exports.likePost = likePost;
-exports.disLikePost = disLikePost;
 exports.getTrendingPosts = getTrendingPosts;
 exports.saveComment = saveComment;
+exports.getAllComments = getAllComments;
+exports.getAllLikes = getAllLikes;

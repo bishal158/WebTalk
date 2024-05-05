@@ -26,7 +26,7 @@ export const Footer = () => {
     <>
       <footer
         className={
-          "w-full md:h-80 bg-[#282529] text-white flex md:flex-row flex-wrap justify-center items-center md:px-10 py-4 px-3"
+          "w-full h-full md:h-80 bg-[#282529] text-white flex md:flex-row flex-wrap justify-center items-center md:px-10 py-4 px-3"
         }
       >
         <div

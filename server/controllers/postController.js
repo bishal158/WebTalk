@@ -78,7 +78,8 @@ const getSinglePost = async (req, res, next) => {
   try {
     const postInfo = await Post.findById(id)
       .populate("author", ["name", "email", "avatar"])
-      .populate("comments");
+      .populate("comments")
+      .populate("likes");
     // console.log(postInfo);
     if (postInfo) {
       res.status(200).json(postInfo);
@@ -89,7 +90,6 @@ const getSinglePost = async (req, res, next) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 // delete a post
 const deletePost = async (req, res, next) => {
   const { id } = req.params;
@@ -146,17 +146,8 @@ const updatePost = (req, res) => {
 const getTrendingPosts = async (req, res, next) => {
   try {
     const aggregation = [
-      {
-        $unwind: "$likes", // Unwind the likes array to access individual likes
-      },
-      {
-        $group: {
-          _id: "$_id", // Group by post ID
-          likesCount: { $sum: 1 }, // Count the number of likes in the unwound array
-        },
-      },
-      { $sort: { likesCount: -1 } }, // Sort by likes count descending
-      { $limit: 10 }, // Limit to top 10 posts (optional)
+      { $sort: { likes: 1 } }, // Sort by likes count descending
+      { $limit: 5 }, // Limit to top 10 posts (optional)
     ];
     const trendingPosts = await Post.aggregate(aggregation);
     res.status(200).json(trendingPosts);
@@ -164,6 +155,8 @@ const getTrendingPosts = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// like and dislike a post
 const likePost = async (req, res, next) => {
   const { id } = req.params;
   const { token } = req.cookies;
@@ -211,7 +204,7 @@ const likePost = async (req, res, next) => {
     }
   });
 };
-
+// save a new comment on a post
 const saveComment = async (req, res, next) => {
   const { postId, comment } = req.body;
   const { token } = req.cookies;
@@ -239,6 +232,8 @@ const saveComment = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// get all comments of a post
 const getAllComments = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -251,6 +246,7 @@ const getAllComments = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 const getAllLikes = async (req, res) => {
   const { id } = req.params;
   try {

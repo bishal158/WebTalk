@@ -3,14 +3,12 @@ import avatar from "../assets/images/User.jpg";
 import moment from "moment-timezone";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllComments } from "../redux/postSlice.js";
+import { getAllComments, getAllLikes } from "../redux/postSlice.js";
 import { base_url } from "../constants/constants.js";
 
 export const PostComments = () => {
   const dispatch = useDispatch();
-  const { isLoading, error, postInfo, postComments } = useSelector(
-    (state) => state.post,
-  );
+  const { isLoading, postComments } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.auth);
   const { id } = useParams();
   useEffect(() => {

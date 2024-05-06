@@ -19,29 +19,28 @@ import { WriteComment } from "../components/WriteComment.jsx";
 import { PostComments } from "../components/PostComments.jsx";
 
 export const Post = () => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(!show);
   const dispatch = useDispatch();
-  const { posts, isLoading, error, postInfo, postComments, postLikes } =
-    useSelector((state) => state.post);
+  const [show, setShow] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const handleClose = () => setShow(!show);
+  const { isLoading, postInfo, postLikes } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.auth);
   const { id } = useParams();
-  const [liked, setLiked] = useState(false);
+
   useEffect(() => {
     dispatch(getSinglePost(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
   const deletePost = async () => {
-    dispatch(deleteSinglePost(id));
+    await dispatch(deleteSinglePost(id));
   };
-  const toggleLike = async () => {
-    try {
-      await dispatch(likedPost(id));
-      setLiked(!liked);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  useEffect(() => {
+    dispatch(getAllLikes(id));
+  }, [id, dispatch]);
 
+  const toggleLike = async () => {
+    await dispatch(likedPost(id));
+    setLiked(!liked);
+  };
   // post not found
   if (!postInfo) {
     if (isLoading) {
@@ -191,7 +190,7 @@ export const Post = () => {
           <WriteComment />
           <h1
             className={
-              "w-full h-10 bg-gray-900 border flex justify-center items-center text-center text-white font-normal rounded-[8px] text-[20px] py-4"
+              "w-full h-15 bg-gray-900 border flex justify-center items-center text-center text-white font-normal rounded-[8px] text-[20px] py-2"
             }
           >
             Trending Now

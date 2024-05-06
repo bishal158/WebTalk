@@ -21,7 +21,9 @@ export const getTrendingPosts = createAsyncThunk(
   "posts/getTrendingPosts",
   async (postData, thunkAPI) => {
     try {
-      const trendingPosts = await axios.get(base_url + "post/getTrendingPosts");
+      const trendingPosts = await axios.get(
+        base_url + "/post/getTrendingPosts",
+      );
       return trendingPosts.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -132,7 +134,7 @@ export const getAllLikes = createAsyncThunk(
   async (postId, thunkAPI) => {
     try {
       const likes = await axios.get(
-        base_url + `/likes/post/${postId}/allLikes`,
+        base_url + `/post/likes/post/${postId}/allLikes`,
       );
       return likes.data;
     } catch (e) {
@@ -183,6 +185,7 @@ const postSlice = createSlice({
     deleted: false,
     postComments: [],
     postLikes: [],
+    trendingPosts: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -225,6 +228,14 @@ const postSlice = createSlice({
         state.posts = [...state.posts];
         state.error = action.payload;
       })
+      .addCase(getTrendingPosts.pending, (state, action) => {
+        state.trendingPosts = [];
+        state.error = null;
+      })
+      .addCase(getTrendingPosts.fulfilled, (state, action) => {
+        state.trendingPosts = action.payload;
+      })
+      .addCase(getTrendingPosts.rejected, (state, action) => {})
       /** filtered Posts **/
       .addCase(getFilteredPosts.pending, (state, action) => {
         state.posts = [...state.posts];

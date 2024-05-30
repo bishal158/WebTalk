@@ -1,6 +1,6 @@
-const Post = require("../models/post");
-const Comment = require("../models/postcomment");
-const Like = require("../models/postlike");
+const Post = require("../models/Post");
+const Comment = require("../models/PostComment");
+const Like = require("../models/PostLike");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
 const cloudinary = require("../utils/cloudinary");

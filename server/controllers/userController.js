@@ -1,5 +1,5 @@
-const User = require("../models/user");
-const Post = require("../models/post");
+const User = require("../models/User");
+const Post = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";

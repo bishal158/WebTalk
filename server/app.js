@@ -2,11 +2,9 @@ const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const path = require("path");
 const cors = require("cors");
 const app = express();
 dotenv.config();
-
 // port number
 const PORT = process.env.PORT;
 const DATABASE_URL = process.env.MONGODB_CONNECTION;
@@ -22,8 +20,6 @@ connectDb().then((r) => console.log("Connected to Database"));
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-// set static folder
-app.use("/uploads", express.static(__dirname + "/uploads"));
 // routes
 const userRouter = require("./routes/userRoutes");
 const postRouter = require("./routes/postRoutes");

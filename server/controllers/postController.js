@@ -3,7 +3,6 @@ const Comment = require("../models/postcomment");
 const Like = require("../models/postlike");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
-const filesystem = require("fs");
 const cloudinary = require("../utils/cloudinary");
 // save a single post
 const savePost = async (req, res, next) => {
@@ -125,12 +124,6 @@ const updatePost = async (req, res) => {
       }
       cover_url = callResult.url;
     });
-    const { originalname, path } = req.file;
-    const parts = originalname.split(".");
-    const extension = parts[parts.length - 1];
-    newPath = path + "." + extension;
-    console.log(newPath);
-    filesystem.renameSync(path, newPath);
   }
   jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
     if (error) throw error;

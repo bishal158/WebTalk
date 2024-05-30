@@ -27,6 +27,9 @@ const userRouter = require("./routes/userRoutes");
 const postRouter = require("./routes/postRoutes");
 app.use("/user", userRouter);
 app.use("/post", postRouter);
+app.get("/", (req, res) => {
+  res.json("Hello World");
+});
 app.listen(PORT);
 
 

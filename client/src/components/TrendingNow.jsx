@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTrendingPosts } from "../redux/postSlice.js";
-import { base_url } from "../constants/constants.js";
 import { Link } from "react-router-dom";
 import moment from "moment-timezone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,7 +25,7 @@ export const TrendingNow = () => {
             <div
               key={trendingPosts._id}
               className={
-                "w-full h-60 flex border mb-3 bg-[#fff]  shadow-white border-b-2"
+                "w-full h-30 flex border mb-3 bg-[#fff]  shadow-white border-b-2"
               }
             >
               <div
@@ -38,7 +37,7 @@ export const TrendingNow = () => {
                   className={
                     "w-full h-full border-1 border-black rounded-[5px]"
                   }
-                  src={base_url + "/" + trendingPosts.cover}
+                  src={trendingPosts.cover}
                   alt={"...."}
                 />
               </div>

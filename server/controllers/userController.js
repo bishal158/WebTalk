@@ -17,7 +17,7 @@ const register = async (req, res, next) => {
     await cloudinary.uploader
       .upload(req.file.path)
       .then(async (value) => {
-        avatar_url = value.url;
+        avatar_url = value.secure_url;
         existingUser = await User.findOne({ email: email });
         if (existingUser) {
           res.status(409).json({ message: " Email already registered" });

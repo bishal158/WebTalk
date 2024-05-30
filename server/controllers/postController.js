@@ -16,7 +16,7 @@ const savePost = async (req, res, next) => {
           res.status(500).json({ message: "File must be less then 10 MB" });
         }
       }
-      cover_url = callResult.url;
+      cover_url = callResult.secure_url;
     });
     const { token } = req.cookies;
     jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
@@ -122,7 +122,7 @@ const updatePost = async (req, res) => {
           res.status(500).json({ message: "File must be less then 10 MB" });
         }
       }
-      cover_url = callResult.url;
+      cover_url = callResult.secure_url;
     });
   }
   jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { base_url } from "../constants/constants.js";
 
+const base_url = import.meta.env.VITE_BASE_API_URL;
 //saving a post
 export const savePost = createAsyncThunk(
   "posts/savePost",

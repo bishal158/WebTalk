@@ -3,36 +3,38 @@ const Post = require("../models/post");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
-const filesystem = require("fs");
-
+const cloudinary = require("../utils/cloudinary");
 const register = async (req, res, next) => {
   // file handle
-  console.log(req.file);
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const extension = parts[parts.length - 1];
-  const newPath = path + "." + extension;
-  filesystem.renameSync(path, newPath);
+  let avatar_url;
   // destructure data
   const { name, email, password } = req.body;
-
   // password hash
   const hasPassword = await bcrypt.hashSync(password, 10);
   // check for existing user
   let existingUser;
   try {
-    existingUser = await User.findOne({ email: email });
-    if (existingUser) {
-      res.status(409).json({ message: " Email already registered" });
-    } else {
-      const user = await User.create({
-        name,
-        email,
-        avatar: newPath,
-        password: hasPassword,
+    await cloudinary.uploader
+      .upload(req.file.path)
+      .then(async (value) => {
+        avatar_url = value.url;
+        existingUser = await User.findOne({ email: email });
+        if (existingUser) {
+          res.status(409).json({ message: " Email already registered" });
+        } else {
+          const user = await User.create({
+            name,
+            email,
+            avatar: avatar_url,
+            password: hasPassword,
+          });
+          res.status(201).json({ message: "Registration Successful" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ message: "File exceeds 10MB" });
       });
-      res.status(201).json({ message: "Registration Successful" });
-    }
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -40,7 +42,6 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password);
   try {
     const user = await User.findOne({ email: email });
     if (user && user._id) {
@@ -52,7 +53,7 @@ const login = async (req, res, next) => {
           _id: user._id,
           name: user.name,
           email: user.email,
-          avatar: process.env.BASE_URL + user.avatar,
+          avatar: user.avatar,
           role: "user",
           isLoggedIn: true,
         };
@@ -85,11 +86,17 @@ const logout = async (req, res) => {
   res.cookie("token", "").json({ message: "Logout Successful" });
 };
 
-const userTotal = async (req, res) => {
+const totalCount = async (req, res) => {
   try {
-    const totalUser = await User.countDocuments({}); // Count all documents
-    res.status(200).json({ count: totalUser });
+    const totalUser = await User.countDocuments({});
+    const totalPost = await Post.countDocuments({});
+
+    let totalCount = {
+      totalUser,
+      totalPost,
+    };
     console.log(totalUser);
+    res.status(200).json(totalCount);
   } catch (e) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -97,4 +104,4 @@ const userTotal = async (req, res) => {
 exports.register = register;
 exports.login = login;
 exports.logout = logout;
-exports.userTotal = userTotal;
+exports.totalCount = totalCount;

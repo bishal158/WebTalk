@@ -1,6 +1,6 @@
 import register_img from "../assets/images/Sign up.gif";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { loginInputs } from "../constants/inputs.js";
 import { loginUser } from "../redux/authSlice.js";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, error, success, userInfo } = useSelector(
+  const { isLoading, userInfo } = useSelector(
     (state) => state.auth,
   );
   const [showPassword, setShowPassword] = useState(false);

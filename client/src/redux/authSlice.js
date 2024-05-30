@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { base_url } from "../constants/constants.js";
-import { Cookies } from "react-cookie";
 
 const getUser = () => {
   let user = localStorage.getItem("userInfo");
@@ -47,6 +46,18 @@ export const logoutUser = createAsyncThunk(
     }
   },
 );
+
+export const totalCounter = createAsyncThunk(
+  "auth/totalCount",
+  async (arg, thunkAPI) => {
+    try {
+      const response = await axios.get(base_url + "/user/totalCount");
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  },
+);
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -54,6 +65,7 @@ const authSlice = createSlice({
     error: null,
     success: false,
     userInfo: getUser(),
+    totalCount: {},
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -64,7 +76,7 @@ const authSlice = createSlice({
         state.error = null;
         state.success = false;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.isLoading = false;
         state.error = null;
         state.success = true;
@@ -96,12 +108,22 @@ const authSlice = createSlice({
         state.userInfo = null;
         localStorage.setItem("userInfo", state.userInfo);
       })
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(logoutUser.fulfilled, (state, action) => {
         state.userInfo = null;
         state.isLoading = false;
         state.error = null;
         state.success = action.payload;
         localStorage.removeItem("userInfo");
+      })
+      .addCase(totalCounter.pending, (state) => {
+        state.totalCount = {};
+      })
+      .addCase(totalCounter.fulfilled, (state, action) => {
+        state.totalCount = action.payload;
       });
   },
 });

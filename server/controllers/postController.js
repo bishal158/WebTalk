@@ -1,22 +1,24 @@
-const User = require("../models/user");
 const Post = require("../models/post");
 const Comment = require("../models/postcomment");
 const Like = require("../models/postlike");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "web-talk";
 const filesystem = require("fs");
-
+const cloudinary = require("../utils/cloudinary");
 // save a single post
 const savePost = async (req, res, next) => {
   if (!req.file) {
     res.status(404).json({ message: "Upload a cover image" });
   } else {
-    const { originalname, path } = req.file;
-    const parts = originalname.split(".");
-    const extension = parts[parts.length - 1];
-    const newPath = path + "." + extension;
-    filesystem.renameSync(path, newPath);
+    let cover_url;
+    await cloudinary.uploader.upload(req.file.path, function (err, callResult) {
+      if (err) {
+        if (err.http_code === 400) {
+          res.status(500).json({ message: "File must be less then 10 MB" });
+        }
+      }
+      cover_url = callResult.url;
+    });
     const { token } = req.cookies;
     jwt.verify(token, JWT_SECRET_KEY, {}, async (error, info) => {
       if (error) throw error;
@@ -27,7 +29,7 @@ const savePost = async (req, res, next) => {
           summary,
           category,
           content,
-          cover: newPath,
+          cover: cover_url,
           author: info._id,
         });
         res.status(201).json(post);
@@ -110,11 +112,19 @@ const deletePost = async (req, res, next) => {
   });
 };
 // update a post
-const updatePost = (req, res) => {
-  const { title, summary, cover, content, category, id } = req.body;
+const updatePost = async (req, res) => {
+  const { title, summary, content, category, id } = req.body;
   const { token } = req.cookies;
-  let newPath = null;
+  let cover_url;
   if (req.file) {
+    await cloudinary.uploader.upload(req.file.path, function (err, callResult) {
+      if (err) {
+        if (err.http_code === 400) {
+          res.status(500).json({ message: "File must be less then 10 MB" });
+        }
+      }
+      cover_url = callResult.url;
+    });
     const { originalname, path } = req.file;
     const parts = originalname.split(".");
     const extension = parts[parts.length - 1];
@@ -134,7 +144,7 @@ const updatePost = (req, res) => {
           summary,
           category,
           content,
-          cover: newPath ? newPath : post.cover,
+          cover: cover_url ? cover_url : post.cover,
         });
         res.status(200).json(updatedPost);
       }
@@ -147,7 +157,7 @@ const getTrendingPosts = async (req, res, next) => {
   try {
     const aggregation = [
       { $sort: { likes: 1 } }, // Sort by likes count descending
-      { $limit: 5 }, // Limit to top 10 posts (optional)
+      { $limit: 10 }, // Limit to top 10 posts (optional)
     ];
     const trendingPosts = await Post.aggregate(aggregation);
     res.status(200).json(trendingPosts);

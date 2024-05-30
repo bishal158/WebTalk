@@ -39,7 +39,7 @@ export const PostComments = () => {
               >
                 <div className={"w-auto h-full p-2 "}>
                   <img
-                    src={base_url + "/" + comment.commentedBy.avatar}
+                    src={comment.commentedBy.avatar}
                     alt={"profile"}
                     className={"w-10 h-10 "}
                   />

@@ -1,8 +1,8 @@
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import avatar from "../assets/images/dummy-image.jpg";
+
+import {useState } from "react";
+
 import Logo from "../assets/favicon/favicon-32x32.png";
-import { NavLink, redirect, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { generalRoutes, userRoutes } from "../constants/constants.js";
@@ -12,7 +12,7 @@ import { Cookies } from "react-cookie";
 export const SideBar = () => {
   const navigation = useNavigate();
   const cookies = new Cookies();
-  const { isLoading, error, success, userInfo } = useSelector(
+  const {userInfo } = useSelector(
     (state) => state.auth,
   );
   const dispatch = useDispatch();

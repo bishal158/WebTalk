@@ -17,6 +17,7 @@ import { NotAvailableModal } from "../utils/NotAvailableModal.jsx";
 import { TrendingNow } from "../components/TrendingNow.jsx";
 import { WriteComment } from "../components/WriteComment.jsx";
 import { PostComments } from "../components/PostComments.jsx";
+import { Carasoul } from "../components/Carasoul.jsx";
 
 export const Post = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ export const Post = () => {
   }
   return (
     <>
+      {/*<Carasoul />*/}
       <h1 className={"w-full h-fit text-3xl px-3 font-bold text-[#1f1f1f]"}>
         {postInfo.title}
       </h1>
@@ -82,8 +84,10 @@ export const Post = () => {
         >
           <div className={"w-full h-full  flex justify-center items-center"}>
             <img
-              src={base_url + "/" + postInfo.cover}
-              className={"md:w-full md:h-96 h-60 w-full rounded"}
+              src={postInfo.cover}
+              className={
+                "md:w-full md:h-96 h-60 w-full rounded border border-blue-700"
+              }
               alt={"ssss"}
             />
           </div>
@@ -101,7 +105,7 @@ export const Post = () => {
               }
             >
               <img
-                src={base_url + "/" + postInfo.author.avatar}
+                src={postInfo.author.avatar}
                 alt={"..."}
                 className={
                   "md:w-14 md:h-14 h-10 w-10 rounded-full border-red-500 border-2 mx-2"

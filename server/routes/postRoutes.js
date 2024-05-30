@@ -13,9 +13,7 @@ const {
   getAllComments,
   getAllLikes,
 } = require("../controllers/postController");
-
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const upload = require("../middlewares/upload");
 router.post("/savePost", upload.single("cover"), savePost);
 router.get("/getAllPost", getAllPosts);
 router.get("/getFilteredPosts", getFilteredPosts);

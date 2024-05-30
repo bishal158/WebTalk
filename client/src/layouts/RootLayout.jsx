@@ -14,7 +14,7 @@ export const RootLayout = ({ children }) => {
     document.getElementById("sidebar").classList.toggle("close");
   };
   return (
-    <div>
+    <>
       <SideBar />
       <main className={"h-full w-full flex flex-col"}>
         <nav
@@ -46,6 +46,6 @@ export const RootLayout = ({ children }) => {
         <div>{children}</div>
       </main>
       <Footer />
-    </div>
+    </>
   );
 };

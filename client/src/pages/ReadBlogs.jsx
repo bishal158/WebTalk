@@ -24,7 +24,7 @@ export const ReadBlogs = () => {
   };
   return (
     <>
-      <section className={"w-full h-full flex flex-wrap gap-0"}>
+      <section className={"w-full h-full min-h-screen flex flex-wrap gap-0"}>
         <div className={"w-full h-fit md:w-1/4 md:h-full flex flex-col p-2"}>
           <input
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -105,7 +105,7 @@ export const ReadBlogs = () => {
                         }
                       >
                         <img
-                          src={base_url + "/" + post.cover}
+                          src={post.cover}
                           className={"w-full h-full rounded-[10px]"}
                           alt={"ssss"}
                         />
@@ -118,7 +118,7 @@ export const ReadBlogs = () => {
                             className={
                               "w-10 h-10 rounded border-blue-950 border-[1px] mx-1"
                             }
-                            src={base_url + "/" + post.author.avatar}
+                            src={post.author.avatar}
                             alt={"...."}
                           />
                           <span className={"w-auto text-red-800 font-medium"}>

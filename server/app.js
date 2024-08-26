@@ -19,9 +19,7 @@ const connectDb = async () => {
 connectDb().then((r) => console.log("Connected to Database"));
 app.use(cookieParser());
 app.use(express.json());
-app.use(
-  cors({ credentials: true, origin: "https://web-talk-bishal.vercel.app" }),
-);
+app.use(cors({ credentials: true, origin: " http://localhost:5173" }));
 // routes
 const userRouter = require("./routes/userRoutes");
 const postRouter = require("./routes/postRoutes");

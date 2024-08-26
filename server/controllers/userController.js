@@ -82,6 +82,7 @@ const login = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 const logout = async (req, res) => {
   res.cookie("token", "").json({ message: "Logout Successful" });
 };
